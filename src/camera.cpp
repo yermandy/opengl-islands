@@ -4,21 +4,18 @@
 
 
 Camera::Camera(GLFWwindow* window) : m_window(window) {
+    if (window == nullptr) {
+        std::cerr << "Use GLFWwindow to initialize camera" << std::endl;
+        return;
+    }
     int w, h;
     glfwGetWindowSize(window, &w, &h);
     m_width = float(w);
     m_height = float(h);
 }
 
-Camera::Camera() {
-    if (!m_instance) {
-        std::cerr << "Camera has not been initialized" << std::endl;
-        return;
-    }
-}
-
 Camera::~Camera() {
-    delete m_instance;
+    delete s_instance;
 }
 
 void Camera::SetWidthHeight(float width, float height) {
@@ -38,7 +35,6 @@ void Camera::UpdateViewProjection() {
 
     if (!m_main_menu) {
         // Get mouse position
-//        double xpos, ypos;
         glfwGetCursorPos(m_window, &m_mouse_xpos, &m_mouse_ypos);
 
         // Reset mouse position for next frame
@@ -50,7 +46,8 @@ void Camera::UpdateViewProjection() {
     }
 
 
-    if (glfwGetKey(m_window, GLFW_KEY_LEFT_SUPER) == GLFW_RELEASE && glfwGetKey(m_window, GLFW_KEY_P) == GLFW_PRESS) {
+    if (glfwGetKey(m_window, GLFW_KEY_LEFT_SUPER) == GLFW_RELEASE
+        && glfwGetKey(m_window, GLFW_KEY_P) == GLFW_PRESS) {
         m_main_menu = !m_main_menu;
         if (m_main_menu) {
             glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

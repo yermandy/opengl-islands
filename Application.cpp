@@ -5,7 +5,7 @@
 
 
 // Allocate pointer for camera
-Camera *Camera::m_instance = nullptr;
+Camera *Camera::s_instance = nullptr;
 
 int main() {
 

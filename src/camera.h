@@ -9,16 +9,15 @@
 class Camera {
 
 public:
-    static Camera* m_instance;
+    static Camera* s_instance;
 
     Camera(GLFWwindow* window);
 
-    Camera();
 
-    static Camera* GetInstance(GLFWwindow* window) {
-        if (!m_instance)
-            m_instance = new Camera(window);
-        return m_instance;
+    static Camera* GetInstance(GLFWwindow* window = nullptr) {
+        if (!s_instance)
+            s_instance = new Camera(window);
+        return s_instance;
     }
 
     virtual ~Camera();
@@ -33,12 +32,8 @@ public:
 
     void SetWidthHeight(float width, float height);
 
-//    [[nodiscard]] GLFWwindow* GetGLFWwindow() const { return m_window; };
-
 private:
     GLFWwindow* m_window;
-
-//    static Camera* m_instance = 0;
 
     float m_width = 0;
     float m_height = 0;

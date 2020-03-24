@@ -21,7 +21,6 @@ file(
         ${PROJECT_SOURCE_DIR}/src/*/*.cpp
         ${PROJECT_SOURCE_DIR}/src/*/*/*.cpp
         ${PROJECT_SOURCE_DIR}/src/*/*/*/*.cpp
-#        ${PROJECT_SOURCE_DIR}/*/*/*/*.c
         ${PROJECT_SOURCE_DIR}/src/*/*/*/*/*.cpp
 )
 

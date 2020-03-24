@@ -4,7 +4,7 @@
 // region Callbacks
 
 void OnWindowResize(GLFWwindow* window, int width, int height) {
-    Camera::GetInstance(nullptr)->SetWidthHeight(float(width), float(height));
+    Camera::GetInstance()->SetWidthHeight(float(width), float(height));
 }
 
 // endregion
@@ -56,7 +56,7 @@ GLFWwindow* InitWindow() {
     // Ensure we can capture the escape key being pressed below
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     // Hide the mouse and enable unlimited movement
-//    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // Set callback on aspect change
     glfwSetFramebufferSizeCallback(window, OnWindowResize);
 
