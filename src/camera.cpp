@@ -9,9 +9,11 @@ Camera::Camera(GLFWwindow* window) : m_window(window) {
         return;
     }
     int w, h;
-    glfwGetWindowSize(window, &w, &h);
+    glfwGetWindowSize(m_window, &w, &h);
     m_width = float(w);
     m_height = float(h);
+    glfwPollEvents();
+    glfwSetCursorPos(m_window, m_width / 2, m_height / 2);
 }
 
 Camera::~Camera() {

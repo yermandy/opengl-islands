@@ -51,10 +51,7 @@ private:
 
     float m_fovy = 45.0f; // Field of View
 
-    glm::mat4 m_proj_matrix;
-    glm::mat4 m_view_matrix;
-    glm::mat4 m_view_proj_matrix;
-
-private:
-    void OnWindowResize(GLFWwindow* window, int width, int height);
+    glm::mat4 m_proj_matrix = glm::mat4(1.0f);
+    glm::mat4 m_view_matrix = glm::mat4(1.0f);
+    glm::mat4 m_view_proj_matrix = glm::mat4(1.0f);
 };

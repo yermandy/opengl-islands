@@ -42,19 +42,31 @@ int main() {
 
     glClearColor(0.1f, 0.4f, 0.8f, 1.0f); // Background
 
+    glm::mat4 translate;
+
     do {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+//        std::cout << camera->GetViewProjectionMatrix() << std::endl;
         camera->UpdateViewProjection();
         glm::mat4 VP = camera->GetViewProjectionMatrix();
-        glm::mat4 MVP = glm::mat4(1.0f) * VP;
+//        glm::mat4 MVP = VP;
 
-        shader.SetUniformMat4f("u_MVP", MVP);
+        translate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+//        shader.SetUniformMat4f("u_view_proj", VP);
+//        shader.SetUniformMat4f("u_transform", translate);
+        shader.SetUniformMat4f("u_MPV", VP * translate);
 
-        shader.Bind();
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
 //        LOG(glDrawElements(GL_TRIANGLES, triangle_ibo.GetCount(), GL_UNSIGNED_INT, nullptr));
+
+        translate = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, 1.5f, 1.5f));
+//        shader.SetUniformMat4f("u_view_proj", VP);
+//        shader.SetUniformMat4f("u_transform", translate);
+        shader.SetUniformMat4f("u_MPV", VP * translate);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // Swap buffers
         glfwSwapBuffers(window);
