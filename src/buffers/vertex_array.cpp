@@ -3,7 +3,6 @@
 #include "buffer_layout.h"
 
 
-
 VertexArray::VertexArray() {
     LOG(glGenVertexArrays(1, &m_renderer_id));
 }
