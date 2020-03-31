@@ -2,4 +2,4 @@
 
 #include "camera.h"
 
-GLFWwindow* InitWindow();
+GLFWwindow* InitWindow(int width, int height);

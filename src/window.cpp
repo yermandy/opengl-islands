@@ -9,7 +9,7 @@ void OnWindowResize(GLFWwindow* window, int width, int height) {
 
 // endregion
 
-GLFWwindow* InitWindow() {
+GLFWwindow* InitWindow(int width, int height) {
     GLFWwindow* window;
 
     if (!glfwInit()) {
@@ -24,8 +24,8 @@ GLFWwindow* InitWindow() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(
-            640,
-            480,
+            width,
+            height,
             "OpenGL Universe",
             NULL,
             NULL

@@ -7,5 +7,7 @@ class Renderer {
 public:
     void Clear() const;
 
-    void Draw(const VertexArray& vao, const IndexBuffer& ibo, const Shader& shader) const;
+    void DrawTriangles(const VertexArray& vao, const IndexBuffer& ibo, const Shader& shader) const;
+
+    void DrawLines(const VertexArray& vao, const IndexBuffer& ibo, const Shader& shader) const;
 };

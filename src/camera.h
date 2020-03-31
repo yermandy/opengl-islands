@@ -30,6 +30,21 @@ public:
 
     [[nodiscard]] const glm::mat4& GetViewProjectionMatrix() const { return m_view_proj_matrix; }
 
+    [[nodiscard]] const glm::mat4& GetDirections() {
+        m_directions[0][0] = m_x_dir[0];
+        m_directions[1][0] = m_x_dir[1];
+        m_directions[2][0] = m_x_dir[2];
+
+        m_directions[0][1] = m_y_dir[0];
+        m_directions[1][1] = m_y_dir[1];
+        m_directions[2][1] = m_y_dir[2];
+
+        m_directions[0][2] = m_z_dir[0];
+        m_directions[1][2] = m_z_dir[1];
+        m_directions[2][2] = m_z_dir[2];
+        return m_directions;
+    }
+
     void SetWidthHeight(float width, float height);
 
 private:
@@ -54,4 +69,10 @@ private:
     glm::mat4 m_proj_matrix = glm::mat4(1.0f);
     glm::mat4 m_view_matrix = glm::mat4(1.0f);
     glm::mat4 m_view_proj_matrix = glm::mat4(1.0f);
+
+    glm::vec3 m_x_dir = glm::vec3(0.0f);
+    glm::vec3 m_y_dir = glm::vec3(0.0f);
+    glm::vec3 m_z_dir = glm::vec3(0.0f);
+
+    glm::mat4 m_directions = glm::mat4(1.0f);
 };

@@ -1,6 +1,7 @@
 #include "camera.h"
 
 #include <iostream>
+#include <glm/gtx/string_cast.hpp>
 
 
 Camera::Camera(GLFWwindow* window) : m_window(window) {
@@ -32,8 +33,8 @@ void Camera::UpdateViewProjection() {
     static double last_time = glfwGetTime();
 
     // Compute time difference between current and last frame
-    double currentTime = glfwGetTime();
-    auto delta_time = float(currentTime - last_time);
+    double current_time = glfwGetTime();
+    auto delta_time = float(current_time - last_time);
 
     if (!m_main_menu) {
         // Get mouse position
@@ -68,7 +69,7 @@ void Camera::UpdateViewProjection() {
     );
 
     // Right vector
-    glm::vec3 right = glm::vec3(
+    glm::vec3 right(
             sin(m_horizontal_angle - 3.14f / 2.0f),
             0,
             cos(m_horizontal_angle - 3.14f / 2.0f)
@@ -76,6 +77,10 @@ void Camera::UpdateViewProjection() {
 
     // Up vector
     glm::vec3 up = glm::cross(right, direction);
+
+    m_y_dir = up;
+    m_x_dir = right;
+    m_z_dir = direction;
 
     // Move forward
     if (glfwGetKey(m_window, GLFW_KEY_UP) == GLFW_PRESS
@@ -133,5 +138,5 @@ void Camera::UpdateViewProjection() {
     m_view_proj_matrix = m_proj_matrix * m_view_matrix;
 
     // For the next frame, the "last time" will be "now"
-    last_time = currentTime;
+    last_time = current_time;
 }
