@@ -6,13 +6,17 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(GLEW REQUIRED)
 find_package(GLFW3 REQUIRED)
 find_package(glm REQUIRED)
+find_package(assimp REQUIRED)
+find_library(assimp_LIBRARIES NAMES assimp)
 
 set(
         ALL_LIBS
         glfw
         GLEW::glew
         glm
+        ${assimp_LIBRARIES}
 )
+
 
 file(
         GLOB SOURCES
@@ -37,5 +41,7 @@ file(
 include_directories(src)
 
 add_executable(Application ${SOURCES} ${HEADERS})
+
+include_directories(${ASSIMP_INCLUDE_DIR})
 
 target_link_libraries(Application ${ALL_LIBS})

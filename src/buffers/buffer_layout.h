@@ -23,7 +23,9 @@ public:
 
     void Push(uint32_t type, uint32_t count, uint32_t normalized);
 
-    inline const std::vector<BufferElement>& GetElements() const { return m_elements; }
+    void Push(uint32_t type, uint32_t count, uint32_t normalized, uint32_t stride);
 
-    inline uint32_t GetStride() const { return m_stride; }
+    [[nodiscard]] inline const std::vector<BufferElement>& GetElements() const { return m_elements; }
+
+    [[nodiscard]] inline uint32_t GetStride() const { return m_stride; }
 };

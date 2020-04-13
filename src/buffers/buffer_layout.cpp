@@ -17,3 +17,8 @@ void BufferLayout::Push(const uint32_t type, const uint32_t count, const uint32_
     m_elements.push_back({type, count, normalized});
     m_stride += BufferElement::GetSizeOfType(type) * count;
 }
+
+void BufferLayout::Push(const uint32_t type, const uint32_t count, const uint32_t normalized, uint32_t stride) {
+    m_elements.push_back({type, count, normalized});
+    m_stride = stride;
+}
