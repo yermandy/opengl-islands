@@ -30,7 +30,6 @@ void VertexBuffer::Unbind() const {
 }
 
 void VertexBuffer::Push(const void* data, unsigned int offset) {
-//    LOG(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
     LOG(glBufferSubData(GL_ARRAY_BUFFER, m_offset * m_size, offset * m_size, data));
     m_offset += offset;
 }

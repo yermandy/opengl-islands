@@ -23,6 +23,7 @@ Mesh::Mesh(const std::string& object_file_name, Shader& shader) {
                               // Calculate normals per vertex.
                               | aiProcess_GenSmoothNormals
                               | aiProcess_JoinIdenticalVertices);
+
     // abort if the loader fails
     if (scene == nullptr) {
         std::cerr << "assimp error: " << importer.GetErrorString() << std::endl;
@@ -62,6 +63,7 @@ Mesh::Mesh(const std::string& object_file_name, Shader& shader) {
     vbo->Push(mesh->mNormals, 3);
     // load texture coordinates to GPU
     vbo->Push(textureCoords, 2);
+
 
 
     // copy all mesh faces into one big array (assimp supports faces with ordinary number of vertices, we use only 3 -> triangles)
@@ -140,6 +142,6 @@ Mesh::Mesh(const std::string& object_file_name, Shader& shader) {
     layout->Push(GL_FLOAT, 2, GL_FALSE, 0);
 
     vao = std::shared_ptr<VertexArray>::make_shared(*new VertexArray());
-    vao->AddBuffer(*vbo, *layout);
+    vao->AddBuffer(*vbo, *layout, mesh->mNumVertices);
 
 }

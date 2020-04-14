@@ -16,7 +16,7 @@ public:
 
     ~VertexArray();
 
-    void AddBuffer(const VertexBuffer& vb, const BufferLayout& layout);
+    void AddBuffer(const VertexBuffer& vb, const BufferLayout& layout, uint32_t count_per_offset = 1);
 
     void Bind() const;
 

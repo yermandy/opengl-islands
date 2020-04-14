@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const std::string& filepath)
         : m_file_path(filepath), m_renderer_id(0) {
@@ -28,6 +29,10 @@ void Shader::SetUniform1i(const std::string& name, int value) {
 
 void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
     LOG(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
+}
+
+void Shader::SetUniform3fv(const std::string& name, const glm::vec3(vec3)) {
+    LOG(glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(vec3)));
 }
 
 void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix) {

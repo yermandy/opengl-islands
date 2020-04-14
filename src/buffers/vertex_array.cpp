@@ -11,7 +11,7 @@ VertexArray::~VertexArray() {
     LOG(glDeleteVertexArrays(1, &m_buffer_id));
 }
 
-void VertexArray::AddBuffer(const VertexBuffer& vb, const BufferLayout& layout) {
+void VertexArray::AddBuffer(const VertexBuffer& vb, const BufferLayout& layout, const uint32_t count_per_offset) {
     Bind();
     vb.Bind();
     const auto& elements = layout.GetElements();
@@ -21,9 +21,8 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const BufferLayout& layout) 
         LOG(glEnableVertexAttribArray(i));
         LOG(glVertexAttribPointer(i, element.count, element.type, element.normalized,
                                      layout.GetStride(), (const void*) offset));
-        offset += element.count * BufferElement::GetSizeOfType(element.type);
+        offset += element.count * BufferElement::GetSizeOfType(element.type) * count_per_offset;
     }
-
 }
 
 void VertexArray::Bind() const {
