@@ -21,7 +21,9 @@ set(
 file(
         GLOB SOURCES
         ${PROJECT_SOURCE_DIR}/*.cpp
+        ${PROJECT_SOURCE_DIR}/libs/*.cpp
         ${PROJECT_SOURCE_DIR}/src/*.cpp
+        ${PROJECT_SOURCE_DIR}/libs/*/*.cpp
         ${PROJECT_SOURCE_DIR}/src/*/*.cpp
         ${PROJECT_SOURCE_DIR}/src/*/*/*.cpp
         ${PROJECT_SOURCE_DIR}/src/*/*/*/*.cpp
@@ -31,14 +33,16 @@ file(
 file(
         GLOB HEADERS
         ${PROJECT_SOURCE_DIR}/*.h
+        ${PROJECT_SOURCE_DIR}/libs/*.h
         ${PROJECT_SOURCE_DIR}/src/*.h
+        ${PROJECT_SOURCE_DIR}/libs/*/*.h
         ${PROJECT_SOURCE_DIR}/src/*/*.h
         ${PROJECT_SOURCE_DIR}/src/*/*/*.h
         ${PROJECT_SOURCE_DIR}/src/*/*/*/*.h
         ${PROJECT_SOURCE_DIR}/src/*/*/*/*/*.h
 )
 
-include_directories(src)
+include_directories(src libs)
 
 add_executable(Application ${SOURCES} ${HEADERS})
 

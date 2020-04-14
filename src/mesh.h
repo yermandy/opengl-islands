@@ -22,6 +22,6 @@ public:
     glm::vec3    m_ambient = glm::vec3(0);
     glm::vec3    m_diffuse = glm::vec3(0);
     glm::vec3    m_specular = glm::vec3(0);
-    float        m_shininess = 0.0f;
+    float        m_shininess = 1.0f;
     unsigned int m_texture = 0;
 };

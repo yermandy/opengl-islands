@@ -27,13 +27,15 @@ public:
 
     void Unbind() const;
 
-    void SetUniform1i(const std::string& name, int value);
+    void SetInt1(const std::string& name, const int value);
 
-    void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+    void SetFloat1(const std::string& name, const float value);
 
-    void SetUniform3fv(const std::string& name, const glm::vec3(vec3));
+    void SetFloat4(const std::string& name, const float v0, const float v1, const float v2, const float v3);
 
-    void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
+    void SetVec3(const std::string& name, const glm::vec3(vec3));
+
+    void SetMat4(const std::string& name, const glm::mat4& matrix);
 
 private:
 

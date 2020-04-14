@@ -23,19 +23,23 @@ void Shader::Unbind() const {
     LOG(glUseProgram(0));
 }
 
-void Shader::SetUniform1i(const std::string& name, int value) {
+void Shader::SetInt1(const std::string& name, const int value) {
     LOG(glUniform1i(GetUniformLocation(name), value));
 }
 
-void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
+void Shader::SetFloat1(const std::string& name, const float v0) {
+    LOG(glUniform1f(GetUniformLocation(name), v0));
+}
+
+void Shader::SetFloat4(const std::string& name, const float v0, const float v1, const float v2, const float v3) {
     LOG(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
 }
 
-void Shader::SetUniform3fv(const std::string& name, const glm::vec3(vec3)) {
+void Shader::SetVec3(const std::string& name, const glm::vec3(vec3)) {
     LOG(glUniform3fv(GetUniformLocation(name), 1, glm::value_ptr(vec3)));
 }
 
-void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix) {
+void Shader::SetMat4(const std::string& name, const glm::mat4& matrix) {
     LOG(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
 }
 
