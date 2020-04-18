@@ -6,12 +6,12 @@ layout(location = 0) in vec3 v_position;
 // vetrex color
 layout(location = 1) in vec3 v_color;
 
-uniform mat4 u_MPV;
+uniform mat4 u_MVP;
 
 out vec3 fragment_color;
 
 void main() {
-    gl_Position = u_MPV * vec4(v_position, 1.0f);
+    gl_Position = u_MVP * vec4(v_position, 1.0f);
     fragment_color = v_color;
 }
 

@@ -24,11 +24,9 @@ public:
 
     void UpdateViewProjection();
 
-    [[nodiscard]] const glm::mat4& GetProjectionMatrix() const { return m_proj_matrix; }
+    [[nodiscard]] const glm::mat4& GetMatProj() const { return m_proj_matrix; }
 
-    [[nodiscard]] const glm::mat4& GetViewMatrix() const { return m_view_matrix; }
-
-    [[nodiscard]] const glm::mat4& GetViewProjectionMatrix() const { return m_view_proj_matrix; }
+    [[nodiscard]] const glm::mat4& GetMatView() const { return m_view_matrix; }
 
     [[nodiscard]] const glm::mat4& GetDirections() {
         m_directions[0][0] = m_x_dir[0];
@@ -68,7 +66,7 @@ private:
 
     glm::mat4 m_proj_matrix = glm::mat4(1.0f);
     glm::mat4 m_view_matrix = glm::mat4(1.0f);
-    glm::mat4 m_view_proj_matrix = glm::mat4(1.0f);
+//    glm::mat4 m_view_proj_matrix = glm::mat4(1.0f);
 
     glm::vec3 m_x_dir = glm::vec3(0.0f);
     glm::vec3 m_y_dir = glm::vec3(0.0f);

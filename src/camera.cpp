@@ -125,7 +125,7 @@ void Camera::UpdateViewProjection() {
             glm::radians(m_fovy),
             m_width / m_height,
             0.1f,
-            100.0f
+            200.0f
     );
 
     // View matrix
@@ -134,8 +134,6 @@ void Camera::UpdateViewProjection() {
             m_position + direction, // and looks here : at the same position, plus "direction"
             up                  // Head is up (set to 0,-1,0 to look upside-down)
     );
-
-    m_view_proj_matrix = m_proj_matrix * m_view_matrix;
 
     // For the next frame, the "last time" will be "now"
     last_time = current_time;

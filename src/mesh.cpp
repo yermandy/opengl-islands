@@ -7,22 +7,24 @@
 #include <GL/glew.h>
 #include "logger.h"
 
-Mesh::Mesh(const std::string& object_file_name, Shader& shader) {
+Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 scale)
+        : m_position(position), m_scale(scale) {
+
     Assimp::Importer importer;
 
     // Unitize object in size (scale the model to fit into (-1..1)^3)
-    importer.SetPropertyInteger(AI_CONFIG_PP_PTV_NORMALIZE, 1);
+//    importer.SetPropertyInteger(AI_CONFIG_PP_PTV_NORMALIZE, 1);
 
     // Load asset from the file - you can play with various processing steps
     const aiScene* scene = importer.ReadFile(
             object_file_name.c_str(), 0
-                              // Triangulate polygons (if any).
-                              | aiProcess_Triangulate
-                              // Transforms scene hierarchy into one root with geometry-leafs only. For more see Doc.
-                              | aiProcess_PreTransformVertices
-                              // Calculate normals per vertex.
-                              | aiProcess_GenSmoothNormals
-                              | aiProcess_JoinIdenticalVertices);
+                                      // Triangulate polygons (if any).
+                                      | aiProcess_Triangulate
+                                      // Transforms scene hierarchy into one root with geometry-leafs only. For more see Doc.
+                                      | aiProcess_PreTransformVertices
+                                      // Calculate normals per vertex.
+                                      | aiProcess_GenSmoothNormals
+                                      | aiProcess_JoinIdenticalVertices);
 
     // abort if the loader fails
     if (scene == nullptr) {
@@ -33,15 +35,22 @@ Mesh::Mesh(const std::string& object_file_name, Shader& shader) {
     // some formats store whole scene (multiple meshes and materials, lights, cameras, ...) in one file, we cannot handle that in our simplified example
     if (scene->mNumMeshes != 1) {
         std::cerr << "this simplified loader can only process files with only one mesh" << std::endl;
-        throw std::exception();
+//        throw std::exception();
     }
 
     // in this phase we know we have one mesh in our loaded scene, we can directly copy its data to OpenGL ...
-    const aiMesh* mesh = scene->mMeshes[0];
+//    const aiMesh* mesh = scene->mMeshes[1];
+
+    const aiMesh* mesh;
+    if (scene->mNumMeshes == 1)
+        mesh = scene->mMeshes[0];
+    else
+        mesh = scene->mMeshes[4];
+
 
     // just texture 0 for now
-    auto* textureCoords = new float[2 * mesh->mNumVertices];  // 2 floats per vertex
-    float* currentTextureCoord = textureCoords;
+    auto* tex_coords = new float[2 * mesh->mNumVertices];  // 2 floats per vertex
+    float* cur_tex_coord = tex_coords;
 
     // copy texture coordinates
     aiVector3D vect;
@@ -50,8 +59,8 @@ Mesh::Mesh(const std::string& object_file_name, Shader& shader) {
         // we use 2D textures with 2 coordinates and ignore the third coordinate
         for (unsigned int idx = 0; idx < mesh->mNumVertices; idx++) {
             vect = (mesh->mTextureCoords[0])[idx];
-            *currentTextureCoord++ = vect.x;
-            *currentTextureCoord++ = vect.y;
+            *cur_tex_coord++ = vect.x;
+            *cur_tex_coord++ = vect.y;
         }
     }
 
@@ -62,8 +71,7 @@ Mesh::Mesh(const std::string& object_file_name, Shader& shader) {
     // load normals to GPU
     vbo->Push(mesh->mNormals, 3);
     // load texture coordinates to GPU
-    vbo->Push(textureCoords, 2);
-
+    vbo->Push(tex_coords, 2);
 
 
     // copy all mesh faces into one big array (assimp supports faces with ordinary number of vertices, we use only 3 -> triangles)
@@ -129,6 +137,7 @@ Mesh::Mesh(const std::string& object_file_name, Shader& shader) {
         }
 
         std::cout << "Loading texture file: " << textureName << std::endl;
+        std::cerr << "Textures are not supported yet" << std::endl;
 //        (*geometry)->texture = pgr::createTexture(textureName);
     }
 

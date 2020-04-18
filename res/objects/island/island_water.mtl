@@ -1,0 +1,310 @@
+newmtl AdornoSG
+illum 4
+Kd 0.32 0.32 0.32
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.08 0.08 0.08
+Ns 23.00
+newmtl AguaSG
+illum 4
+Kd 0.12 0.33 0.80
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.03 0.08 0.20
+Ns 23.00
+newmtl CasaSG
+illum 4
+Kd 0.80 0.61 0.25
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.15 0.06
+Ns 23.00
+newmtl CasaSG1
+illum 4
+Kd 0.23 0.80 0.21
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.06 0.20 0.05
+Ns 23.00
+newmtl CubeSG
+illum 4
+Kd 0.80 0.18 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.04 0.00
+Ns 23.00
+newmtl CylinderFBXASC046001SG
+illum 4
+Kd 1.00 0.32 0.08
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.25 0.08 0.02
+Ns 23.00
+newmtl EspadaSG
+illum 4
+Kd 0.04 0.08 0.80
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.01 0.02 0.20
+Ns 23.00
+newmtl EspadaSG1
+illum 4
+Kd 0.72 0.80 0.09
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.18 0.20 0.02
+Ns 23.00
+newmtl EspadaSG2
+illum 4
+Kd 0.77 0.77 0.77
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.19 0.19 0.19
+Ns 23.00
+newmtl EspadaSG3
+illum 4
+Kd 0.43 0.43 0.43
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.11 0.11 0.11
+Ns 23.00
+newmtl EspadaSG4
+illum 4
+Kd 0.80 0.03 0.03
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.01 0.01
+Ns 23.00
+newmtl HachaSG
+illum 4
+Kd 0.53 0.21 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.13 0.05 0.00
+Ns 23.00
+newmtl HachaSG1
+illum 4
+Kd 0.25 0.25 0.25
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.06 0.06 0.06
+Ns 23.00
+newmtl HojasFBXASC046001SG
+illum 4
+Kd 0.80 0.05 0.26
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.01 0.06
+Ns 23.00
+newmtl HojasFBXASC046001SG1
+illum 4
+Kd 0.81 0.12 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.03 0.13
+Ns 23.00
+newmtl HojasFBXASC046001SG2
+illum 4
+Kd 0.54 0.17 0.38
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.13 0.04 0.09
+Ns 23.00
+newmtl IcosphereSG
+illum 4
+Kd 0.89 0.96 1.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.22 0.24 0.25
+Ns 23.00
+newmtl IslaSG
+illum 4
+Kd 0.22 0.06 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.06 0.01 0.00
+Ns 23.00
+newmtl IslaSG1
+illum 4
+Kd 0.83 0.83 0.83
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.21 0.21 0.21
+Ns 54.25
+newmtl IslaSG2
+illum 4
+Kd 0.03 0.30 0.01
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.01 0.07 0.00
+Ns 23.00
+newmtl IslaSG3
+illum 4
+Kd 0.85 0.33 0.05
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.21 0.08 0.01
+Ns 23.00
+newmtl IslaSG4
+illum 4
+Kd 0.08 0.02 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.02 0.01 0.00
+Ns 23.00
+newmtl PlaneFBXASC046003SG
+illum 4
+Kd 0.53 0.07 0.27
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.13 0.02 0.07
+Ns 23.00
+newmtl RocaSG
+illum 4
+Kd 0.35 0.35 0.35
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.09 0.09 0.09
+Ns 23.00
+newmtl RocaSG1
+illum 4
+Kd 0.24 0.24 0.24
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.06 0.06 0.06
+Ns 23.00
+newmtl TableroSG
+illum 4
+Kd 0.80 0.25 0.01
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.06 0.00
+Ns 23.00
+newmtl ToriiSG
+illum 4
+Kd 0.80 0.02 0.02
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.01 0.01
+Ns 23.00
+newmtl ToriiSG1
+illum 4
+Kd 0.06 0.06 0.06
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.01 0.01 0.01
+Ns 23.00
+newmtl ToriiSG2
+illum 4
+Kd 0.38 0.38 0.38
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.10 0.10 0.10
+Ns 23.00
+newmtl Tronco2SG
+illum 4
+Kd 0.80 0.16 0.03
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.04 0.01
+Ns 23.00
+newmtl Tronco2SG1
+illum 4
+Kd 0.24 0.05 0.01
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.06 0.01 0.00
+Ns 23.00
+newmtl dark_stoneSG
+illum 4
+Kd 0.08 0.02 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.02 0.01 0.00
+Ns 23.00
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl pasted__AguaSG
+illum 4
+Kd 0.12 0.33 0.80
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.03 0.08 0.20
+Ns 23.00
+newmtl pasted__IslaSG
+illum 4
+Kd 0.22 0.06 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.06 0.01 0.00
+Ns 23.00
+newmtl pasted__IslaSG2
+illum 4
+Kd 0.03 0.30 0.01
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.01 0.07 0.00
+Ns 23.00
+newmtl pasted__IslaSG3
+illum 4
+Kd 0.85 0.33 0.05
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.21 0.08 0.01
+Ns 23.00
+newmtl pasted__IslaSG4
+illum 4
+Kd 0.08 0.02 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.02 0.01 0.00
+Ns 23.00
+newmtl stone1SG
+illum 4
+Kd 0.22 0.06 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.06 0.01 0.00
+Ns 23.00
