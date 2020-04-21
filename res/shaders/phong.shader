@@ -16,6 +16,7 @@ uniform mat4 u_V;
 //out vec2 UV;
 out vec3 v_position_worldspace;
 out vec3 v_normal_cameraspace;
+out vec2 v_uv;
 out vec3 eye_direction_cameraspace;
 //out vec3 light_direction_cameraspace;
 
@@ -42,7 +43,7 @@ void main() {
 
 
     // UV of the vertex. No special space for this one.
-//    UV = vertexUV;
+    v_uv = v_texture;
 }
 
 #shader fragment
@@ -80,7 +81,7 @@ struct PointLight {
 };
 
 // sampler for the texture access
-uniform sampler2D u_tex_coords;
+uniform sampler2D u_tex_sampler;
 uniform Material u_material;
 uniform Material u_light;
 //uniform vec3 u_light_position;
@@ -94,6 +95,7 @@ uniform DirectionalLight sun;
 in vec3 v_position_worldspace;
 in vec3 v_normal_cameraspace;
 in vec3 eye_direction_cameraspace;
+in vec2 v_uv;
 //in vec3 light_direction_cameraspace;
 
 //uniform vec3 light_direction_cameraspace;
@@ -154,4 +156,7 @@ void main() {
     // Add all point light sources
     for (int i = 0; i < N_POINT_LIGHTS; i++)
         color += GetPointLight(point_lights[i], N, v_position_worldspace, E);
+
+    if (u_material.use_texture)
+        color *= texture(u_tex_sampler, v_uv).rgb;
 }

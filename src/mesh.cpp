@@ -6,6 +6,7 @@
 
 #include <GL/glew.h>
 #include "logger.h"
+#include "texture.h"
 
 Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 scale)
         : m_position(position), m_scale(scale) {
@@ -126,19 +127,21 @@ Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 sc
         // get texture name
         aiString path; // filename
 
-        aiReturn texFound = mat->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-        std::string textureName = path.data;
+        mat->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+        std::string tex_name = path.data;
+        std::cout << "Loading texture file: " << tex_name << std::endl;
+        m_texture = std::shared_ptr<Texture>::make_shared(*new Texture("res/textures/" + tex_name));
 
-        size_t found = object_file_name.find_last_of("/\\");
+//        size_t found = object_file_name.find_last_of("/\\");
         // insert correct texture file path
-        if (found != std::string::npos) { // not found
-            //subMesh_p->textureName.insert(0, "/");
-            textureName.insert(0, object_file_name.substr(0, found + 1));
-        }
+//        if (found != std::string::npos) { // not found
+            //subMesh_p->tex_name.insert(0, "/");
+//            tex_name.insert(0, object_file_name.substr(0, found + 1));
+//        }
 
-        std::cout << "Loading texture file: " << textureName << std::endl;
-        std::cerr << "Textures are not supported yet" << std::endl;
-//        (*geometry)->texture = pgr::createTexture(textureName);
+
+//        std::cerr << "Textures are not supported yet" << std::endl;
+
     }
 
     // Create layout for this mesh
