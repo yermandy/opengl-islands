@@ -33,33 +33,45 @@ unsigned int LoadCubeMap(std::vector<std::string> faces) {
 
 Skybox::Skybox() {
     std::vector<std::string> faces{
-            "res/textures/skybox/night/left.png",
-            "res/textures/skybox/night/right.png",
-            "res/textures/skybox/night/bottom.png",
-            "res/textures/skybox/night/top.png",
-            "res/textures/skybox/night/front.png",
-            "res/textures/skybox/night/back.png",
+//            "res/textures/skybox/night/left.png",
+//            "res/textures/skybox/night/right.png",
+//            "res/textures/skybox/night/bottom.png",
+//            "res/textures/skybox/night/top.png",
+//            "res/textures/skybox/night/front.png",
+//            "res/textures/skybox/night/back.png",
+
+            "res/textures/skybox/day/left.jpg",
+            "res/textures/skybox/day/right.jpg",
+            "res/textures/skybox/day/bottom.jpg",
+            "res/textures/skybox/day/top.jpg",
+            "res/textures/skybox/day/front.jpg",
+            "res/textures/skybox/day/back.jpg",
     };
 
     m_cube_map_texture_id = LoadCubeMap(faces);
 
-    static const float screenCoords[] = {
+    static const float coords[] = {
             -1.0f, -1.0f,
              1.0f, -1.0f,
-            -1.0f, 1.0f,
-             1.0f, 1.0f
+            -1.0f,  1.0f,
+             1.0f,  1.0f
     };
 
     glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &m_ibo);
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_ibo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(screenCoords), &screenCoords, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(coords), &coords, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 
     shader = std::make_shared<Shader>(*new Shader("res/shaders/skybox.shader"));
+}
+
+void Skybox::BindTexture() const {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_cube_map_texture_id);
 }
 
 void Skybox::Draw() const {
@@ -68,8 +80,7 @@ void Skybox::Draw() const {
     // bind geometry
     glBindVertexArray(m_vao);
     // bind texture
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_cube_map_texture_id);
+    BindTexture();
     // draw
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);

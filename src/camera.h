@@ -28,6 +28,8 @@ public:
 
     [[nodiscard]] const glm::mat4& GetMatView() const { return m_view_matrix; }
 
+    [[nodiscard]] const glm::vec3& GetPosition() const { return m_position; }
+
     [[nodiscard]] const glm::mat4& GetDirections() {
         m_directions[0][0] = m_x_dir[0];
         m_directions[1][0] = m_x_dir[1];

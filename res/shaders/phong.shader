@@ -142,7 +142,7 @@ vec3 GetDirectionalLight(DirectionalLight light, vec3 N, vec3 E) {
     // Specular : reflective highlight, mirror like property
     vec3 specular = pow(cos_beta, u_material.shininess) * u_material.specular * u_light.specular;
     // Combine ambient, diffuse and specular to recieve Phong shading
-    return ambient + diffuse + specular;
+    return (ambient + diffuse + specular) * 1.75f;
 }
 
 

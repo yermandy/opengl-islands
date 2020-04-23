@@ -6,6 +6,8 @@ class Skybox {
 public:
     Skybox();
 
+    void BindTexture() const;
+
     void Draw() const;
 
     std::shared_ptr<Shader> shader;

@@ -41,6 +41,8 @@ int main() {
 
     Shader standard_shader("res/shaders/standard.shader");
 
+    Shader water_shader("res/shaders/water.shader");
+
     // Background color
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -68,7 +70,7 @@ int main() {
     island.push_back(island_ground_2);
     island.push_back(island_mountains);
     island.push_back(island_grass);
-    island.push_back(island_water);
+//    island.push_back(island_water);
     island.push_back(island_cloud_1);
     island.push_back(island_cloud_2);
     island.push_back(island_cloud_3);
@@ -83,7 +85,7 @@ int main() {
     ImGui::StyleColorsDark();
     // endregion
 
-    DirectionalLight sun(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+    DirectionalLight sun(glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f));
     PointLight lamp(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f, -3.0f, 1.5f));
     Mesh lamp_mesh("res/objects/cube.obj", lamp.m_position);
     Mesh test_mesh("res/objects/sphere.obj");
@@ -142,6 +144,31 @@ int main() {
 //        }
 
         {
+            water_shader.Bind();
+            skybox.BindTexture();
+            M = glm::mat4(1.0f);
+            M = glm::translate(M, island_water.m_position);
+            M = glm::scale(M, island_water.m_scale);
+            water_shader.SetVec3("u_camera_position", camera->GetPosition());
+            water_shader.SetMat4("u_M", M);
+            water_shader.SetMat4("u_V", V);
+            water_shader.SetMat4("u_P", P);
+            water_shader.SetInt1("u_skybox", 0);
+            renderer.DrawTriangles(*island_water.vao, *island_water.ibo, water_shader);
+        }
+
+        {
+            water_shader.Bind();
+            skybox.BindTexture();
+            water_shader.SetVec3("u_camera_position", camera->GetPosition());
+            water_shader.SetMat4("u_M", glm::mat4(1.0f));
+            water_shader.SetMat4("u_V", V);
+            water_shader.SetMat4("u_P", P);
+            water_shader.SetInt1("u_skybox", 0);
+            renderer.DrawTriangles(*cube.vao, *cube.ibo, water_shader);
+        }
+
+        {
             M = glm::translate(glm::mat4(1.0f), lamp.m_position);
             M = glm::scale(M, glm::vec3(0.1f));
             standard_shader.Bind();
@@ -166,14 +193,16 @@ int main() {
 
         // region Sun
         {
-            sun.m_direction[0] = 10000 * glm::sin(-1000 + time * .1);
-            sun.m_direction[1] = 10000 * glm::cos(-1000 + time * .1);
+            sun.m_direction[0] = 5000 * glm::sin(time * .5);
+            sun.m_direction[1] = 10000;
+            sun.m_direction[2] = 5000 * glm::cos(time * .5);
+
 
             sun.m_direction = glm::vec4(sun.m_direction, 1);
-            translate = glm::vec3(sun.m_direction[0] / 100, sun.m_direction[1] / 100, sun.m_direction[2]);
+            translate = glm::vec3(sun.m_direction[0] / 100, sun.m_direction[1] / 100, sun.m_direction[2] / 100);
             M = glm::translate(glm::mat4(1.0f), translate);
             M = glm::scale(M, glm::vec3(2.0f));
-            M = glm::rotate(M, glm::radians(float(time) * 15.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            M = glm::rotate(M, glm::radians(float(time) * 100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
             standard_shader.Bind();
             sun_object.m_texture->Bind();
             standard_shader.SetInt1("u_tex_sampler", 0);
