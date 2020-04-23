@@ -106,6 +106,8 @@ int main() {
 //    LOG(glBlendFunc(GL_ONE, GL_ONE));
 
 
+    Skybox skybox;
+
     do {
         renderer.Clear();
 
@@ -199,6 +201,17 @@ int main() {
             standard_shader.SetMat4("u_MVP", camera->GetDirections());
             renderer.DrawLines(*axes.vao, *axes.ibo, standard_shader);
             glViewport(0, 0, width, height);
+        }
+        // endregion
+
+
+        // region Skybox
+        {
+            skybox.shader->Bind();
+            skybox.shader->SetInt1("u_skybox", 0);
+            glm::mat4 inverse_PV = glm::inverse(P * glm::mat4(glm::mat3(V)));
+            skybox.shader->SetMat4("u_inv_PV", inverse_PV);
+            skybox.Draw();
         }
         // endregion
 

@@ -11,6 +11,8 @@
 Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 scale)
         : m_position(position), m_scale(scale) {
 
+    std::cout << "Loading mesh : " << object_file_name << std::endl;
+
     Assimp::Importer importer;
 
     // Unitize object in size (scale the model to fit into (-1..1)^3)
@@ -129,7 +131,7 @@ Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 sc
 
         mat->GetTexture(aiTextureType_DIFFUSE, 0, &path);
         std::string tex_name = path.data;
-        std::cout << "Loading texture file: " << tex_name << std::endl;
+        std::cout << "Loading texture : " << tex_name << std::endl;
         m_texture = std::shared_ptr<Texture>::make_shared(*new Texture("res/textures/" + tex_name));
 
 //        size_t found = object_file_name.find_last_of("/\\");

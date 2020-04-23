@@ -7,6 +7,7 @@
 
 Shader::Shader(const std::string& filepath)
         : m_file_path(filepath), m_renderer_id(0) {
+    std::cout << "Loading shader : " << m_file_path << std::endl;
     ShaderProgramSource source = ParseShader(filepath);
     m_renderer_id = CreateShader(source.VertexSource, source.FragmentSource);
 }
@@ -41,6 +42,13 @@ void Shader::SetVec3(const std::string& name, const glm::vec3(vec3)) {
 
 void Shader::SetMat4(const std::string& name, const glm::mat4& matrix) {
     LOG(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
+}
+
+void Shader::SetMeshMaterial(const Mesh& mesh) {
+    SetVec3("u_material.ambient", mesh.m_ambient);
+    SetVec3("u_material.diffuse", mesh.m_diffuse);
+    SetVec3("u_material.specular", mesh.m_specular);
+    SetFloat1("u_material.shininess", mesh.m_shininess);
 }
 
 int Shader::GetUniformLocation(const std::string& name) const {
@@ -116,6 +124,12 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
     glDeleteShader(fs);
 
     return program;
+}
+
+void Shader::SetMVP(const glm::mat4& MVP, const glm::mat4& M, const glm::mat4& V) {
+    SetMat4("u_MVP", MVP);
+    SetMat4("u_M", M);
+    SetMat4("u_V", V);
 }
 
 

@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <glm/glm.hpp>
+#include "mesh.h"
 
 struct ShaderProgramSource {
     std::string VertexSource;
@@ -36,6 +37,10 @@ public:
     void SetVec3(const std::string& name, const glm::vec3(vec3));
 
     void SetMat4(const std::string& name, const glm::mat4& matrix);
+
+    void SetMeshMaterial(const Mesh& mesh);
+
+    void SetMVP(const glm::mat4& MVP, const glm::mat4& M, const glm::mat4& V);
 
 private:
 

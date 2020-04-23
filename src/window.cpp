@@ -26,7 +26,7 @@ GLFWwindow* InitWindow(int width, int height) {
     window = glfwCreateWindow(
             width,
             height,
-            "OpenGL Universe",
+            "Floating islands",
             NULL,
             NULL
     );
@@ -48,7 +48,7 @@ GLFWwindow* InitWindow(int width, int height) {
 
     std::cout << "OpenGL : " << glGetString(GL_VERSION) << std::endl;
     std::cout << "GLEW   : " << glewGetString(GLEW_VERSION) << std::endl;
-    std::cout << "GLFW   : " << glfwGetVersionString() << std::endl;
+    std::cout << "GLFW   : " << glfwGetVersionString() << std::endl << std::endl;
 
 //    glfwSetKeyCallback(window, onKeyEnter);
 //    glfwSetScrollCallback(window, onScroll);
