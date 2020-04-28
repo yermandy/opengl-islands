@@ -158,5 +158,6 @@ void main() {
         color += GetPointLight(point_lights[i], N, v_position_worldspace, E);
 
     if (u_material.use_texture)
-        color *= texture(u_tex_sampler, v_uv).rgb;
+        color = mix(color, texture(u_tex_sampler, v_uv).rgb, 0.5);
+//        color *= texture(u_tex_sampler, v_uv).rgb;
 }

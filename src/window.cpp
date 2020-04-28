@@ -7,6 +7,28 @@ void OnWindowResize(GLFWwindow* window, int width, int height) {
     Camera::GetInstance()->SetWidthHeight(float(width), float(height));
 }
 
+void OnKeyEnter(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    Camera* camera = Camera::GetInstance();
+    if (action == GLFW_PRESS && key == GLFW_KEY_I) {
+
+        if (camera->m_camera_view_type == CameraViewType::NONE) {
+            camera->m_camera_view_type = CameraViewType::FRONT;
+            camera->m_position = glm::vec3(-8.6f, 7.3f, 14.5f);
+            camera->m_vertical_angle = -0.5f;
+            camera->m_horizontal_angle = -3.7f;
+        } else if (camera->m_camera_view_type == CameraViewType::FRONT) {
+            camera->m_camera_view_type = CameraViewType::BACK;
+            camera->m_position = glm::vec3(4.8f, 1.85f, -8.75f);
+            camera->m_vertical_angle = -0.36f;
+            camera->m_horizontal_angle = 5.85f;
+        } else if (camera->m_camera_view_type == CameraViewType::BACK) {
+            camera->m_camera_view_type = CameraViewType::DYNAMIC;
+        } else {
+            camera->m_camera_view_type = CameraViewType::NONE;
+        }
+    }
+}
+
 // endregion
 
 GLFWwindow* InitWindow(int width, int height) {
@@ -50,8 +72,8 @@ GLFWwindow* InitWindow(int width, int height) {
     std::cout << "GLEW   : " << glewGetString(GLEW_VERSION) << std::endl;
     std::cout << "GLFW   : " << glfwGetVersionString() << std::endl << std::endl;
 
-//    glfwSetKeyCallback(window, onKeyEnter);
-//    glfwSetScrollCallback(window, onScroll);
+    glfwSetKeyCallback(window, OnKeyEnter);
+//    glfwSetScrollCallback(window, OnScroll);
 
     // Ensure we can capture the escape key being pressed below
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);

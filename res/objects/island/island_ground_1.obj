@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib island_ground.mtl
+mtllib materials.mtl
 g default
 v 1.605349 -0.812865 6.546581
 v 0.915043 -1.112239 6.783759

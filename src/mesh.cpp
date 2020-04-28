@@ -42,14 +42,7 @@ Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 sc
     }
 
     // in this phase we know we have one mesh in our loaded scene, we can directly copy its data to OpenGL ...
-//    const aiMesh* mesh = scene->mMeshes[1];
-
-    const aiMesh* mesh;
-    if (scene->mNumMeshes == 1)
-        mesh = scene->mMeshes[0];
-    else
-        mesh = scene->mMeshes[4];
-
+    const aiMesh* mesh = scene->mMeshes[0];
 
     // just texture 0 for now
     auto* tex_coords = new float[2 * mesh->mNumVertices];  // 2 floats per vertex
@@ -66,6 +59,32 @@ Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 sc
             *cur_tex_coord++ = vect.y;
         }
     }
+
+    float min_x = std::numeric_limits<float>::infinity();
+    float min_y = std::numeric_limits<float>::infinity();
+    float min_z = std::numeric_limits<float>::infinity();
+
+    float max_x = -std::numeric_limits<float>::infinity();
+    float max_y = -std::numeric_limits<float>::infinity();
+    float max_z = -std::numeric_limits<float>::infinity();
+
+    for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
+        if (mesh->mVertices[f].x > max_x)
+            max_x = mesh->mVertices[f].x;
+        if (mesh->mVertices[f].y > max_y)
+            max_y = mesh->mVertices[f].y;
+        if (mesh->mVertices[f].z > max_z)
+            max_z = mesh->mVertices[f].z;
+
+        if (mesh->mVertices[f].x < min_x)
+            min_x = mesh->mVertices[f].x;
+        if (mesh->mVertices[f].y < min_y)
+            min_y = mesh->mVertices[f].y;
+        if (mesh->mVertices[f].z < min_z)
+            min_z = mesh->mVertices[f].z;
+    }
+
+    m_pivot = glm::vec3(min_x + (max_x - min_x) / 2, min_y + (max_y - min_y) / 2, min_z + (max_z - min_z) / 2);
 
     // allocate memory for vertices, normals, and texture coordinates
     vbo = std::shared_ptr<VertexBuffer>::make_shared(*new VertexBuffer(sizeof(float) * mesh->mNumVertices, 8));

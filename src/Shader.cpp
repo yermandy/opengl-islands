@@ -10,6 +10,7 @@ Shader::Shader(const std::string& filepath)
     std::cout << "Loading shader : " << m_file_path << std::endl;
     ShaderProgramSource source = ParseShader(filepath);
     m_renderer_id = CreateShader(source.VertexSource, source.FragmentSource);
+    Unbind();
 }
 
 Shader::~Shader() {

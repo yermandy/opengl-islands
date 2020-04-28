@@ -6,6 +6,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+enum CameraViewType {
+    NONE, BACK, FRONT, DYNAMIC
+};
+
 class Camera {
 
 public:
@@ -47,12 +51,15 @@ public:
 
     void SetWidthHeight(float width, float height);
 
-private:
+//private:
     GLFWwindow* m_window;
 
     float m_width = 0;
     float m_height = 0;
+
     bool m_main_menu = false;
+    bool m_static_view = false;
+    CameraViewType m_camera_view_type = CameraViewType::NONE;
 
     float m_horizontal_angle = 3.14f;
     float m_vertical_angle = 0.0f;
@@ -75,4 +82,6 @@ private:
     glm::vec3 m_z_dir = glm::vec3(0.0f);
 
     glm::mat4 m_directions = glm::mat4(1.0f);
+
+
 };

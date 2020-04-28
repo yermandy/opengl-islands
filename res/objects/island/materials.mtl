@@ -260,6 +260,14 @@ Kd 0.50 0.50 0.50
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 Ni 1.00
+newmtl pasted__AguaSG
+illum 4
+Kd 0.12 0.33 0.80
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.03 0.08 0.20
+Ns 23.00
 newmtl pasted__IslaSG
 illum 4
 Kd 0.22 0.06 0.00

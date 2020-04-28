@@ -1,8 +1,11 @@
 #include "camera.h"
 
 #include <iostream>
+#include <glm/gtx/spline.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <vector>
 
+std::vector<glm::vec3> control_points;
 
 Camera::Camera(GLFWwindow* window) : m_window(window) {
     if (window == nullptr) {
@@ -15,6 +18,16 @@ Camera::Camera(GLFWwindow* window) : m_window(window) {
     m_height = float(h);
     glfwPollEvents();
     glfwSetCursorPos(m_window, m_width / 2, m_height / 2);
+
+    control_points.emplace_back(0.0f, 12.5f, 18.0f);
+    control_points.emplace_back(-12.5f, 19.5f, 12.5f);
+    control_points.emplace_back(-14.0f, 23.5f, -5.5f);
+    control_points.emplace_back(4.5f, 26.5f, -16.5f);
+    control_points.emplace_back(20.5f, 18.5f, -6.0f);
+    control_points.emplace_back(23.0f, 7.5f, 13.0f);
+    control_points.emplace_back(0.0f, 12.5f, 18.0f);
+    control_points.emplace_back(-12.5f, 19.5f, 12.5f);
+    control_points.emplace_back(-14.0f, 23.5f, -5.5f);
 }
 
 Camera::~Camera() {
@@ -36,7 +49,21 @@ void Camera::UpdateViewProjection() {
     double current_time = glfwGetTime();
     auto delta_time = float(current_time - last_time);
 
-    if (!m_main_menu) {
+    if (m_camera_view_type == CameraViewType::DYNAMIC) {
+        auto t = float(current_time / 3.0f);
+        int t_i = int(t) % 6;
+        glm::vec3 point = glm::catmullRom(control_points[0 + t_i], control_points[1 + t_i],
+                                          control_points[2 + t_i], control_points[3 + t_i],
+                                          glm::mod(t, 1.0f));
+
+        m_position = point;
+
+        m_vertical_angle = -glm::atan(m_position.y + 3.0f,
+                                              glm::sqrt(glm::pow(m_position.x, 2.0f) +
+                                                        glm::pow(m_position.z, 2.0f)));
+
+        m_horizontal_angle = -3.14f + glm::atan(m_position.x, m_position.z);
+    } else if (!m_main_menu) {
         // Get mouse position
         glfwGetCursorPos(m_window, &m_mouse_xpos, &m_mouse_ypos);
 
@@ -48,7 +75,13 @@ void Camera::UpdateViewProjection() {
         m_vertical_angle += m_mouse_speed * float(m_height / 2 - m_mouse_ypos);
     }
 
+    if (m_vertical_angle > 2.00f)
+        m_vertical_angle = 2.00f;
+    if (m_vertical_angle < -2.00f)
+        m_vertical_angle = -2.00f;
 
+
+    // region Main menu
     if (glfwGetKey(m_window, GLFW_KEY_LEFT_SUPER) == GLFW_RELEASE
         && glfwGetKey(m_window, GLFW_KEY_P) == GLFW_PRESS) {
         m_main_menu = !m_main_menu;
@@ -59,6 +92,7 @@ void Camera::UpdateViewProjection() {
             glfwSetCursorPos(m_window, m_width / 2, m_height / 2);
         }
     }
+    // endregion
 
 
     // Direction : Spherical coordinates to Cartesian coordinates conversion

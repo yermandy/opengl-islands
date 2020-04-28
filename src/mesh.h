@@ -17,6 +17,7 @@ public:
     std::shared_ptr<BufferLayout> layout;
     std::shared_ptr<Texture> m_texture;
 
+    glm::vec3 m_pivot;
     glm::vec3 m_position;
     glm::vec3 m_scale;
 
