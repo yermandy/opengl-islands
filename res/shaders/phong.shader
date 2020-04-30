@@ -204,10 +204,10 @@ void main() {
     // Eye vector (towards the camera)
     vec3 E = normalize(eye_direction_cameraspace);
     // Add directional light (sun)
-//    color += GetDirectionalLight(sun, N, E);
+    color += GetDirectionalLight(sun, N, E);
     // Add all point light sources
-//    for (int i = 0; i < N_POINT_LIGHTS; i++)
-//        color += GetPointLight(point_lights[i], N, v_position_worldspace, E);
+    for (int i = 0; i < N_POINT_LIGHTS; i++)
+        color += GetPointLight(point_lights[i], N, v_position_worldspace, E);
     // Add spot light if flashlight is on
     if (flashlight.on)
         color += GetSpotLight(flashlight, N, v_position_worldspace, E);
