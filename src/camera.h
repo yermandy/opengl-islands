@@ -5,6 +5,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "light.h"
 
 enum CameraViewType {
     NONE, BACK, FRONT, DYNAMIC
@@ -81,7 +82,9 @@ public:
     glm::vec3 m_y_dir = glm::vec3(0.0f);
     glm::vec3 m_z_dir = glm::vec3(0.0f);
 
-    glm::mat4 m_directions = glm::mat4(1.0f);
+    glm::mat4 m_directions = glm::mat4(1.0f); // Axis direction
+    glm::vec3 m_direction = glm::vec3(0.0f); // Camera direction
 
+    SpotLight* flashlight;
 
 };

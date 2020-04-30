@@ -39,7 +39,7 @@ void main() {
 
     // Normal of the the vertex, in camera space
 //    v_normal_cameraspace = (u_V * u_M * vec4(v_normal, 0)).xyz;
-    v_normal_cameraspace = (transpose(inverse(u_V * u_M)) * vec4(v_normal, 0)).xyz;
+    v_normal_cameraspace = (transpose(inverse(u_M)) * vec4(v_normal, 0)).xyz;
 
 
     // UV of the vertex. No special space for this one.
@@ -80,17 +80,37 @@ struct PointLight {
     vec3 specular;
 };
 
+struct SpotLight {
+    vec3 position;
+    vec3 direction;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+    float cut_off;
+    float outer_cut_off;
+    float exponent;
+
+    bool on;
+};
+
 // sampler for the texture access
 uniform sampler2D u_tex_sampler;
 uniform Material u_material;
 uniform Material u_light;
 //uniform vec3 u_light_position;
-uniform vec3 light_color = vec3(1);
-uniform float light_power = 100;
+//uniform vec3 light_color = vec3(1);
+//uniform float light_power = 100;
 
 #define N_POINT_LIGHTS 1
 uniform PointLight point_lights[N_POINT_LIGHTS];
 uniform DirectionalLight sun;
+uniform SpotLight flashlight;
 
 in vec3 v_position_worldspace;
 in vec3 v_normal_cameraspace;
@@ -145,6 +165,38 @@ vec3 GetDirectionalLight(DirectionalLight light, vec3 N, vec3 E) {
     return (ambient + diffuse + specular) * 1.75f;
 }
 
+vec3 GetSpotLight(SpotLight light, vec3 N, vec3 fragment_position, vec3 E) {
+    // Direction of the light (from the fragment to the light)
+    vec3 L = normalize(light.position - fragment_position);
+    // check if lighting is inside the spotlight cone
+    float theta = dot(L, normalize(-light.direction));
+//    if(theta > light.cut_off) // remember that we're working with angles as cosines instead of degrees so a '>' is used.
+//    {
+    // ambient
+    vec3 ambient = light.ambient * u_material.ambient;
+
+    // diffuse
+    float cos_alpha = max(dot(N, L), 0);
+    vec3 diffuse = cos_alpha * light.diffuse * u_material.diffuse;
+
+    // specular
+    vec3 R = reflect(-L, N);
+    float cos_beta = max(dot(E, R), 0);
+    vec3 specular = pow(cos_beta, u_material.shininess) * light.specular * u_material.specular;
+
+    // attenuation
+    float distance = length(light.position - fragment_position);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+    float epsilon = (light.cut_off - light.outer_cut_off);
+    float intensity = clamp((theta - light.outer_cut_off) / epsilon, 0.0, 1.0);
+
+    return (ambient + diffuse + specular) * attenuation * intensity * pow(theta, light.exponent);
+//    }
+
+    return vec3(0.0f);
+}
+
 
 void main() {
     // Normal of the computed fragment, in camera space
@@ -152,12 +204,14 @@ void main() {
     // Eye vector (towards the camera)
     vec3 E = normalize(eye_direction_cameraspace);
     // Add directional light (sun)
-    color += GetDirectionalLight(sun, N, E);
+//    color += GetDirectionalLight(sun, N, E);
     // Add all point light sources
-    for (int i = 0; i < N_POINT_LIGHTS; i++)
-        color += GetPointLight(point_lights[i], N, v_position_worldspace, E);
-
+//    for (int i = 0; i < N_POINT_LIGHTS; i++)
+//        color += GetPointLight(point_lights[i], N, v_position_worldspace, E);
+    // Add spot light if flashlight is on
+    if (flashlight.on)
+        color += GetSpotLight(flashlight, N, v_position_worldspace, E);
+    // Mix color with texture
     if (u_material.use_texture)
         color = mix(color, texture(u_tex_sampler, v_uv).rgb, 0.5);
-//        color *= texture(u_tex_sampler, v_uv).rgb;
 }

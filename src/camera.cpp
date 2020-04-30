@@ -96,7 +96,7 @@ void Camera::UpdateViewProjection() {
 
 
     // Direction : Spherical coordinates to Cartesian coordinates conversion
-    glm::vec3 direction(
+    m_direction = glm::vec3(
             cos(m_vertical_angle) * sin(m_horizontal_angle),
             sin(m_vertical_angle),
             cos(m_vertical_angle) * cos(m_horizontal_angle)
@@ -110,22 +110,22 @@ void Camera::UpdateViewProjection() {
     );
 
     // Up vector
-    glm::vec3 up = glm::cross(right, direction);
+    glm::vec3 up = glm::cross(right, m_direction);
 
     m_y_dir = up;
     m_x_dir = right;
-    m_z_dir = direction;
+    m_z_dir = m_direction;
 
     // Move forward
     if (glfwGetKey(m_window, GLFW_KEY_UP) == GLFW_PRESS
         || glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS) {
-        m_position += direction * delta_time * m_speed;
+        m_position += m_direction * delta_time * m_speed;
     }
 
     // Move backward
     if (glfwGetKey(m_window, GLFW_KEY_DOWN) == GLFW_PRESS
         || glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS) {
-        m_position -= direction * delta_time * m_speed;
+        m_position -= m_direction * delta_time * m_speed;
     }
 
     // Move right
@@ -165,7 +165,7 @@ void Camera::UpdateViewProjection() {
     // View matrix
     m_view_matrix = glm::lookAt(
             m_position,           // Camera is here
-            m_position + direction, // and looks here : at the same position, plus "direction"
+            m_position + m_direction, // and looks here : at the same position, plus "m_direction"
             up                  // Head is up (set to 0,-1,0 to look upside-down)
     );
 

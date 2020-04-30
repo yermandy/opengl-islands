@@ -41,9 +41,39 @@ struct DirectionalLight : Light {
     glm::vec3 m_direction;
 
     DirectionalLight(const glm::vec3& ambient,
-               const glm::vec3& diffuse,
-               const glm::vec3& specular,
-               const glm::vec3 direction) :
+                     const glm::vec3& diffuse,
+                     const glm::vec3& specular,
+                     const glm::vec3 direction) :
             Light(ambient, diffuse, specular),
             m_direction(direction) {}
+};
+
+struct SpotLight : Light {
+    glm::vec3 m_direction;
+    glm::vec3 m_position;
+    float m_cut_off;
+    float m_outer_cut_off;
+    float m_exponent;
+    bool m_on;
+
+    float m_constant = 0.5f;
+    float m_linear = 0.03f;
+    float m_quadratic = 0.01f;
+
+    SpotLight(const glm::vec3& ambient,
+              const glm::vec3& diffuse,
+              const glm::vec3& specular,
+              const glm::vec3 direction,
+              const glm::vec3 position,
+              const float cut_off,
+              const float outer_cut_off,
+              const float exponent,
+              const bool on) :
+            Light(ambient, diffuse, specular),
+            m_direction(direction),
+            m_position(position),
+            m_cut_off(cut_off),
+            m_outer_cut_off(outer_cut_off),
+            m_exponent(exponent),
+            m_on(on) {}
 };

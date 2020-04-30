@@ -107,6 +107,13 @@ int main() {
 
     DirectionalLight sun(glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f));
     PointLight lamp(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f, -3.0f, 1.5f));
+
+    SpotLight flashlight(glm::vec3(0.2f), glm::vec3(1.0f),
+            glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f),
+            glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(13.0f)),
+            50, false);
+    camera->flashlight = &flashlight;
+
     Mesh lamp_mesh("res/objects/cube.obj", lamp.m_position);
     Mesh test_mesh("res/objects/sphere.obj");
 //    Cube lamp_mesh;
@@ -183,29 +190,27 @@ int main() {
 //            phong_shader.SetInt1("u_material.use_texture", 0);
 //        }
 
-
+        // region Flashlight
         {
-            M = glm::translate(glm::mat4(1.0f), lamp.m_position);
-            M = glm::scale(M, glm::vec3(0.1f));
-            standard_shader.Bind();
-            standard_shader.SetInt1("u_use_texture", 0);
-            standard_shader.SetMat4("u_MVP", VP * M);
-            renderer.DrawTriangles(*lamp_mesh.vao, *lamp_mesh.ibo, standard_shader);
-        }
+            flashlight.m_direction = camera->m_direction;
+            flashlight.m_position = camera->m_position;
 
-        {
-            for (const Mesh* island_part : island) {
-                M = glm::mat4(1.0f);
-                M = glm::translate(M, island_part->m_position);
-                M = glm::scale(M, island_part->m_scale);
-                phong_shader.Bind();
-                phong_shader.SetInt1("u_material.use_texture", 0);
-                phong_shader.SetMVP(VP * M, M, V);
-                phong_shader.SetMeshMaterial(*island_part);
-                renderer.DrawTriangles(*island_part->vao, *island_part->ibo, phong_shader);
+            phong_shader.Bind();
+            phong_shader.SetInt1("flashlight.on", flashlight.m_on);
+            if (flashlight.m_on) {
+                phong_shader.SetVec3("flashlight.position", flashlight.m_position);
+                phong_shader.SetVec3("flashlight.direction", flashlight.m_direction);
+                phong_shader.SetVec3("flashlight.ambient", flashlight.m_ambient);
+                phong_shader.SetVec3("flashlight.diffuse", flashlight.m_diffuse);
+                phong_shader.SetVec3("flashlight.specular", flashlight.m_specular);
+                phong_shader.SetFloat1("flashlight.cut_off", flashlight.m_cut_off);
+                phong_shader.SetFloat1("flashlight.exponent", flashlight.m_exponent);
+                phong_shader.SetFloat1("flashlight.constant", flashlight.m_constant);
+                phong_shader.SetFloat1("flashlight.linear", flashlight.m_linear);
+                phong_shader.SetFloat1("flashlight.quadratic", flashlight.m_quadratic);
             }
         }
-
+        // endregion
 
         // region Sun
         {
@@ -228,6 +233,29 @@ int main() {
         }
         // endregion
 
+
+        {
+            M = glm::translate(glm::mat4(1.0f), lamp.m_position);
+            M = glm::scale(M, glm::vec3(0.1f));
+            standard_shader.Bind();
+            standard_shader.SetInt1("u_use_texture", 0);
+            standard_shader.SetMat4("u_MVP", VP * M);
+            renderer.DrawTriangles(*lamp_mesh.vao, *lamp_mesh.ibo, standard_shader);
+        }
+
+
+        {
+            for (const Mesh* island_part : island) {
+                M = glm::mat4(1.0f);
+                M = glm::translate(M, island_part->m_position);
+                M = glm::scale(M, island_part->m_scale);
+                phong_shader.Bind();
+                phong_shader.SetInt1("u_material.use_texture", 0);
+                phong_shader.SetMVP(VP * M, M, V);
+                phong_shader.SetMeshMaterial(*island_part);
+                renderer.DrawTriangles(*island_part->vao, *island_part->ibo, phong_shader);
+            }
+        }
 
 //        {
 //            M = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));

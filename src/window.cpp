@@ -27,6 +27,9 @@ void OnKeyEnter(GLFWwindow* window, int key, int scancode, int action, int mods)
             camera->m_camera_view_type = CameraViewType::NONE;
         }
     }
+    if (action == GLFW_PRESS && key == GLFW_KEY_L) {
+        camera->flashlight->m_on = !camera->flashlight->m_on;
+    }
 }
 
 // endregion
