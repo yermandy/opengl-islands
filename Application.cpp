@@ -141,10 +141,6 @@ int main() {
 
     Texture texture("res/textures/cloud_texture.jpg");
     Texture sun_texture("res/textures/sun_texture.jpg");
-//    LOG(glEnable(GL_BLEND));
-//    LOG(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-//    LOG(glBlendFunc(GL_ONE, GL_ONE));
-
 
     Skybox skybox;
 
@@ -203,6 +199,7 @@ int main() {
 //            phong_shader.SetInt1("u_material.use_texture", 0);
 //        }
 
+
         // region Bridge (manual element)
         {
             M = glm::mat4(1.0f);
@@ -214,7 +211,6 @@ int main() {
             renderer.DrawTriangles(*bridge.vao, *bridge.ibo, phong_shader);
         }
         // endregion
-
 
 
         // region Flashlight
@@ -230,6 +226,7 @@ int main() {
             }
         }
         // endregion
+
 
         // region Sun
         {
@@ -307,6 +304,7 @@ int main() {
         }
         // endregion
 
+
         // region Small island
         {
             t = float(time / 3.0f);
@@ -345,6 +343,8 @@ int main() {
 //            renderer.DrawTriangles(*island_small_floating_stone.vao, *island_small_floating_stone.ibo, phong_shader);
 //        }
 
+        /*
+        // water cube
         {
             LOG(glEnable(GL_BLEND));
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -361,7 +361,10 @@ int main() {
             renderer.DrawTriangles(*cube.vao, *cube.ibo, water_shader);
             LOG(glDisable(GL_BLEND));
         }
+         */
 
+
+        // region Water
         {
             LOG(glEnable(GL_BLEND));
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -378,6 +381,7 @@ int main() {
             renderer.DrawTriangles(*island_water.vao, *island_water.ibo, water_shader);
             LOG(glDisable(GL_BLEND));
         }
+        // endregion
 
 
         // region ImGui window
