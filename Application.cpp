@@ -90,7 +90,7 @@ int main() {
     island.push_back(&island_red_gates);
     island.push_back(&island_black_gates);
     island.push_back(&island_stone_lamps);
-    island.push_back(&island_bridge);
+//    island.push_back(&island_bridge);
     island.push_back(&island_trees_wood);
     island.push_back(&island_leaves_1);
     island.push_back(&island_leaves_2);
@@ -116,15 +116,26 @@ int main() {
 
     Mesh lamp_mesh("res/objects/cube.obj", lamp.m_position);
     Mesh test_mesh("res/objects/sphere.obj");
-//    Cube lamp_mesh;
 
     phong_shader.Bind();
+    // Point light
     phong_shader.SetVec3("point_lights[0].position", lamp.m_position);
     phong_shader.SetVec3("point_lights[0].ambient", lamp.m_ambient);
     phong_shader.SetVec3("point_lights[0].diffuse", lamp.m_diffuse);
     phong_shader.SetVec3("point_lights[0].specular", lamp.m_specular);
     phong_shader.SetFloat1("point_lights[0].constant", lamp.m_constant);
     phong_shader.SetFloat1("point_lights[0].linear", .2f);
+    // Spot light
+    phong_shader.SetVec3("flashlight.position", flashlight.m_position);
+    phong_shader.SetVec3("flashlight.direction", flashlight.m_direction);
+    phong_shader.SetVec3("flashlight.ambient", flashlight.m_ambient);
+    phong_shader.SetVec3("flashlight.diffuse", flashlight.m_diffuse);
+    phong_shader.SetVec3("flashlight.specular", flashlight.m_specular);
+    phong_shader.SetFloat1("flashlight.cut_off", flashlight.m_cut_off);
+    phong_shader.SetFloat1("flashlight.exponent", flashlight.m_exponent);
+    phong_shader.SetFloat1("flashlight.constant", flashlight.m_constant);
+    phong_shader.SetFloat1("flashlight.linear", flashlight.m_linear);
+    phong_shader.SetFloat1("flashlight.quadratic", flashlight.m_quadratic);
 
     Renderer renderer;
 
@@ -137,8 +148,7 @@ int main() {
 
     Skybox skybox;
 
-    float refraction;
-
+    // region Control points for hermite curve
     float t = 0.0f;
 
     std::vector<glm::vec3> control_points;
@@ -157,6 +167,9 @@ int main() {
 
     control_points.emplace_back(0.0f, 0.0f, 0.0f);
     control_points.emplace_back(-5.0f, 0.0f, 4.0f);
+    // endregion
+
+    Bridge bridge;
 
     do {
         renderer.Clear();
@@ -190,24 +203,30 @@ int main() {
 //            phong_shader.SetInt1("u_material.use_texture", 0);
 //        }
 
+        // region Bridge (manual element)
+        {
+            M = glm::mat4(1.0f);
+            M = glm::translate(M, island_bridge.m_position);
+            phong_shader.Bind();
+            phong_shader.SetInt1("u_material.use_texture", 0);
+            phong_shader.SetMVP(VP * M, M, V);
+            phong_shader.SetMeshMaterial(island_bridge);
+            renderer.DrawTriangles(*bridge.vao, *bridge.ibo, phong_shader);
+        }
+        // endregion
+
+
+
         // region Flashlight
         {
-            flashlight.m_direction = camera->m_direction;
-            flashlight.m_position = camera->m_position;
-
             phong_shader.Bind();
             phong_shader.SetInt1("flashlight.on", flashlight.m_on);
             if (flashlight.m_on) {
+                flashlight.m_direction = camera->m_direction;
+                flashlight.m_position = camera->m_position;
+
                 phong_shader.SetVec3("flashlight.position", flashlight.m_position);
                 phong_shader.SetVec3("flashlight.direction", flashlight.m_direction);
-                phong_shader.SetVec3("flashlight.ambient", flashlight.m_ambient);
-                phong_shader.SetVec3("flashlight.diffuse", flashlight.m_diffuse);
-                phong_shader.SetVec3("flashlight.specular", flashlight.m_specular);
-                phong_shader.SetFloat1("flashlight.cut_off", flashlight.m_cut_off);
-                phong_shader.SetFloat1("flashlight.exponent", flashlight.m_exponent);
-                phong_shader.SetFloat1("flashlight.constant", flashlight.m_constant);
-                phong_shader.SetFloat1("flashlight.linear", flashlight.m_linear);
-                phong_shader.SetFloat1("flashlight.quadratic", flashlight.m_quadratic);
             }
         }
         // endregion

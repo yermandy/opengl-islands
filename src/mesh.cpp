@@ -68,7 +68,7 @@ Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 sc
     float max_y = -std::numeric_limits<float>::infinity();
     float max_z = -std::numeric_limits<float>::infinity();
 
-    for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
+    for (unsigned int f = 0; f < mesh->mNumVertices; f++) {
         if (mesh->mVertices[f].x > max_x)
             max_x = mesh->mVertices[f].x;
         if (mesh->mVertices[f].y > max_y)
@@ -95,14 +95,32 @@ Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 sc
     // load texture coordinates to GPU
     vbo->Push(tex_coords, 2);
 
+//    if (strcmp(scene->mRootNode->mName.data, "island_bridge.obj") == 0) {
+//        for (unsigned int f = 0; f < mesh->mNumVertices; f++) {
+//            std::cout
+//                    << mesh->mVertices[f].x << ", " << mesh->mVertices[f].y << ", " << mesh->mVertices[f].z << ", "
+//                    << mesh->mNormals[f].x << ", " << mesh->mNormals[f].y << ", " << mesh->mNormals[f].z << ", "
+//                    << tex_coords[f * 2] << ", " << tex_coords[f * 2 + 1] << ", "
+//                    << std::endl;
+//        }
+//    }
+
+
 
     // copy all mesh faces into one big array (assimp supports faces with ordinary number of vertices, we use only 3 -> triangles)
     auto* indices = new unsigned int[mesh->mNumFaces * 3];
 
-    for (unsigned int f = 0; f < mesh->mNumFaces; ++f) {
+    for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
         indices[f * 3 + 0] = mesh->mFaces[f].mIndices[0];
         indices[f * 3 + 1] = mesh->mFaces[f].mIndices[1];
         indices[f * 3 + 2] = mesh->mFaces[f].mIndices[2];
+
+//        if (strcmp(scene->mRootNode->mName.data, "island_bridge.obj") == 0) {
+//            std::cout << mesh->mFaces[f].mIndices[0] << ", "
+//                      << mesh->mFaces[f].mIndices[1] << ", "
+//                      << mesh->mFaces[f].mIndices[2] << ", "
+//                      << std::endl;
+//        }
     }
 
     // copy our temporary index array to OpenGL and free the array
@@ -156,7 +174,7 @@ Mesh::Mesh(const std::string& object_file_name, glm::vec3 position, glm::vec3 sc
 //        size_t found = object_file_name.find_last_of("/\\");
         // insert correct texture file path
 //        if (found != std::string::npos) { // not found
-            //subMesh_p->tex_name.insert(0, "/");
+        //subMesh_p->tex_name.insert(0, "/");
 //            tex_name.insert(0, object_file_name.substr(0, found + 1));
 //        }
 

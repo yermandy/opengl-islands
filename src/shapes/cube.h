@@ -1,17 +1,14 @@
 #pragma once
 
-#include "buffers/buffers.h"
+#include "common.h"
 
-class Cube {
+class Cube : public Shape {
 
 public:
     Cube();
     virtual ~Cube();
 
-    std::shared_ptr<IndexBuffer> ibo;
-    std::shared_ptr<VertexArray> vao;
-    std::shared_ptr<VertexBuffer> vbo;
-    std::shared_ptr<BufferLayout> layout;
+//private:
 
     float m_cube_data[6 * 8] = {
 //            x      y      z       r     g     b
@@ -22,7 +19,7 @@ public:
              1.0f, -1.0f, -1.0f,   0.8f, 0.0f, 0.0f, // 4
              1.0f, -1.0f,  1.0f,   0.8f, 0.0f, 0.8f, // 5
              1.0f,  1.0f, -1.0f,   0.8f, 0.8f, 0.0f, // 6
-             1.0f,  1.0f,  1.0f,   0.8f, 0.8f, 0.8f // 7
+             1.0f,  1.0f,  1.0f,   0.8f, 0.8f, 0.8f  // 7
     };
 
     const unsigned int m_cube_indices[6 * 6] = {
