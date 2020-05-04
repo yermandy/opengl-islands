@@ -4,10 +4,11 @@
 #include "window.h"
 #include "shader.h"
 #include "renderer.h"
-#include "shapes/shapes.h"
+//#include "shapes/shapes.h"
 #include "mesh.h"
 #include "light.h"
 #include "texture.h"
+#include "configuration.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -31,28 +32,10 @@ int main() {
 
     Camera* camera = Camera::GetInstance(window);
 
-    Axes axes;
-
-    Mesh cube("res/objects/cube.obj");
-
-    Shader phong_shader("res/shaders/phong.shader");
-    phong_shader.Bind();
-    phong_shader.SetVec3("u_light.ambient", glm::vec3(0.1f));
-    phong_shader.SetVec3("u_light.diffuse", glm::vec3(0.7f));
-    phong_shader.SetVec3("u_light.specular", glm::vec3(1.0f));
-
-    Shader standard_shader("res/shaders/standard.shader");
-
-    Shader water_shader("res/shaders/water.shader");
-
-    // Background color
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    Configuration();
 
     glm::vec3 translate;
     glm::mat4 M;
-
-    Mesh sun_object("res/objects/sun.obj");
-
 
     // region Island
     std::vector<Mesh*> island;
@@ -98,52 +81,6 @@ int main() {
 
     // endregion
 
-    // region ImGui setup
-    ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330 core");
-    ImGui::StyleColorsDark();
-    // endregion
-
-    DirectionalLight sun(glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f));
-    PointLight lamp(glm::vec3(0.1f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(0.0f, -3.0f, 1.5f));
-
-    SpotLight flashlight(glm::vec3(0.2f), glm::vec3(1.0f),
-            glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f),
-            glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(13.0f)),
-            50, false);
-    camera->flashlight = &flashlight;
-
-    Mesh lamp_mesh("res/objects/cube.obj", lamp.m_position);
-    Mesh test_mesh("res/objects/sphere.obj");
-
-    phong_shader.Bind();
-    // Point light
-    phong_shader.SetVec3("point_lights[0].position", lamp.m_position);
-    phong_shader.SetVec3("point_lights[0].ambient", lamp.m_ambient);
-    phong_shader.SetVec3("point_lights[0].diffuse", lamp.m_diffuse);
-    phong_shader.SetVec3("point_lights[0].specular", lamp.m_specular);
-    phong_shader.SetFloat1("point_lights[0].constant", lamp.m_constant);
-    phong_shader.SetFloat1("point_lights[0].linear", .2f);
-    // Spot light
-    phong_shader.SetVec3("flashlight.position", flashlight.m_position);
-    phong_shader.SetVec3("flashlight.direction", flashlight.m_direction);
-    phong_shader.SetVec3("flashlight.ambient", flashlight.m_ambient);
-    phong_shader.SetVec3("flashlight.diffuse", flashlight.m_diffuse);
-    phong_shader.SetVec3("flashlight.specular", flashlight.m_specular);
-    phong_shader.SetFloat1("flashlight.cut_off", flashlight.m_cut_off);
-    phong_shader.SetFloat1("flashlight.exponent", flashlight.m_exponent);
-    phong_shader.SetFloat1("flashlight.constant", flashlight.m_constant);
-    phong_shader.SetFloat1("flashlight.linear", flashlight.m_linear);
-    phong_shader.SetFloat1("flashlight.quadratic", flashlight.m_quadratic);
-
-    Renderer renderer;
-
-    Texture texture("res/textures/cloud_texture.jpg");
-    Texture sun_texture("res/textures/sun_texture.jpg");
-
-    Skybox skybox;
-
     // region Control points for hermite curve
     float t = 0.0f;
 
@@ -165,7 +102,9 @@ int main() {
     control_points.emplace_back(-5.0f, 0.0f, 4.0f);
     // endregion
 
-    Bridge bridge;
+    Renderer renderer;
+
+    Configuration();
 
     do {
         renderer.Clear();
@@ -175,28 +114,27 @@ int main() {
         glm::mat4 V = camera->GetMatView();
         glm::mat4 VP = P * V;
 
-
         double time = glfwGetTime();
 
 //        for (float i = -10; i < 11.0; i += 2.001) {
 //            for (float  j = -10; j < 11.0;  j += 2.001) {
 //                translate = glm::translate(glm::mat4(1.0f), glm::vec3(i, j, .0f));
-//                standard_shader.Bind();
-//                standard_shader.SetMat4("u_MVP", VP * translate);
+//                standard_shader->Bind();
+//                standard_shader->SetMat4("u_MVP", VP * translate);
 //                renderer.DrawTriangles(*cube.vao, *cube.ibo, standard_shader);
 //            }
 //        }
 
 //        {
 //            M = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));
-//            phong_shader.Bind();
+//            phong_shader->Bind();
 //            texture.Bind();
-//            phong_shader.SetMVP(VP * M, M, V);
-//            phong_shader.SetMeshMaterial(test_mesh);
-//            phong_shader.SetInt1("u_tex_sampler", 0);
-//            phong_shader.SetInt1("u_material.use_texture", 1);
+//            phong_shader->SetMVP(VP * M, M, V);
+//            phong_shader->SetMeshMaterial(test_mesh);
+//            phong_shader->SetInt1("u_tex_sampler", 0);
+//            phong_shader->SetInt1("u_material.use_texture", 1);
 //            renderer.DrawTriangles(*test_mesh.vao, *test_mesh.ibo, phong_shader);
-//            phong_shader.SetInt1("u_material.use_texture", 0);
+//            phong_shader->SetInt1("u_material.use_texture", 0);
 //        }
 
 
@@ -204,25 +142,25 @@ int main() {
         {
             M = glm::mat4(1.0f);
             M = glm::translate(M, island_bridge.m_position);
-            phong_shader.Bind();
-            phong_shader.SetInt1("u_material.use_texture", 0);
-            phong_shader.SetMVP(VP * M, M, V);
-            phong_shader.SetMeshMaterial(island_bridge);
-            renderer.DrawTriangles(*bridge.vao, *bridge.ibo, phong_shader);
+            phong_shader->Bind();
+            phong_shader->SetInt1("u_material.use_texture", 0);
+            phong_shader->SetMVP(VP * M, M, V);
+            phong_shader->SetMeshMaterial(island_bridge);
+            renderer.DrawTriangles(*bridge->vao, *bridge->ibo, *phong_shader);
         }
         // endregion
 
 
         // region Flashlight
         {
-            phong_shader.Bind();
-            phong_shader.SetInt1("flashlight.on", flashlight.m_on);
-            if (flashlight.m_on) {
-                flashlight.m_direction = camera->m_direction;
-                flashlight.m_position = camera->m_position;
+            phong_shader->Bind();
+            phong_shader->SetInt1("flashlight.on", flashlight->m_on);
+            if (flashlight->m_on) {
+                flashlight->m_direction = camera->m_direction;
+                flashlight->m_position = camera->m_position;
 
-                phong_shader.SetVec3("flashlight.position", flashlight.m_position);
-                phong_shader.SetVec3("flashlight.direction", flashlight.m_direction);
+                phong_shader->SetVec3("flashlight.position", flashlight->m_position);
+                phong_shader->SetVec3("flashlight.direction", flashlight->m_direction);
             }
         }
         // endregion
@@ -230,33 +168,33 @@ int main() {
 
         // region Sun
         {
-            sun.m_direction[0] = 5000 * glm::sin(time * .5);
-            sun.m_direction[1] = 10000;
-            sun.m_direction[2] = 5000 * glm::cos(time * .5);
+            sun->m_direction[0] = 5000 * glm::sin(time * .5);
+            sun->m_direction[1] = 10000;
+            sun->m_direction[2] = 5000 * glm::cos(time * .5);
 
 
-            sun.m_direction = glm::vec4(sun.m_direction, 1);
-            translate = glm::vec3(sun.m_direction[0] / 100, sun.m_direction[1] / 100, sun.m_direction[2] / 100);
+            sun->m_direction = glm::vec4(sun->m_direction, 1);
+            translate = glm::vec3(sun->m_direction[0] / 100, sun->m_direction[1] / 100, sun->m_direction[2] / 100);
             M = glm::translate(glm::mat4(1.0f), translate);
             M = glm::scale(M, glm::vec3(2.0f));
             M = glm::rotate(M, glm::radians(float(time) * 100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-            standard_shader.Bind();
-            sun_object.m_texture->Bind();
-            standard_shader.SetInt1("u_tex_sampler", 0);
-            standard_shader.SetInt1("u_use_texture", 1);
-            standard_shader.SetMat4("u_MVP", VP * M);
-            renderer.DrawTriangles(*sun_object.vao, *sun_object.ibo, standard_shader);
+            standard_shader->Bind();
+            sun_object->m_texture->Bind();
+            standard_shader->SetInt1("u_tex_sampler", 0);
+            standard_shader->SetInt1("u_use_texture", 1);
+            standard_shader->SetMat4("u_MVP", VP * M);
+            renderer.DrawTriangles(*sun_object->vao, *sun_object->ibo, *standard_shader);
         }
         // endregion
 
 
         {
-            M = glm::translate(glm::mat4(1.0f), lamp.m_position);
+            M = glm::translate(glm::mat4(1.0f), lamp->m_position);
             M = glm::scale(M, glm::vec3(0.1f));
-            standard_shader.Bind();
-            standard_shader.SetInt1("u_use_texture", 0);
-            standard_shader.SetMat4("u_MVP", VP * M);
-            renderer.DrawTriangles(*lamp_mesh.vao, *lamp_mesh.ibo, standard_shader);
+            standard_shader->Bind();
+            standard_shader->SetInt1("u_use_texture", 0);
+            standard_shader->SetMat4("u_MVP", VP * M);
+            renderer.DrawTriangles(*lamp_mesh->vao, *lamp_mesh->ibo, *standard_shader);
         }
 
 
@@ -265,19 +203,19 @@ int main() {
                 M = glm::mat4(1.0f);
                 M = glm::translate(M, island_part->m_position);
                 M = glm::scale(M, island_part->m_scale);
-                phong_shader.Bind();
-                phong_shader.SetInt1("u_material.use_texture", 0);
-                phong_shader.SetMVP(VP * M, M, V);
-                phong_shader.SetMeshMaterial(*island_part);
-                renderer.DrawTriangles(*island_part->vao, *island_part->ibo, phong_shader);
+                phong_shader->Bind();
+                phong_shader->SetInt1("u_material.use_texture", 0);
+                phong_shader->SetMVP(VP * M, M, V);
+                phong_shader->SetMeshMaterial(*island_part);
+                renderer.DrawTriangles(*island_part->vao, *island_part->ibo, *phong_shader);
             }
         }
 
 //        {
 //            M = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 //            M = glm::scale(M, glm::vec3(0.5f));
-//            phong_shader.Bind();
-//            phong_shader.SetMVP(VP * M, M, V);
+//            phong_shader->Bind();
+//            phong_shader->SetMVP(VP * M, M, V);
 //            renderer.DrawTriangles(*cube.vao, *cube.ibo, phong_shader);
 //        }
 
@@ -285,10 +223,10 @@ int main() {
         {
             glfwGetFramebufferSize(window, &width, &height);
             glViewport(10, 10, 160, 160);
-            standard_shader.Bind();
-            standard_shader.SetInt1("u_use_texture", 0);
-            standard_shader.SetMat4("u_MVP", camera->GetDirections());
-            renderer.DrawLines(*axes.vao, *axes.ibo, standard_shader);
+            standard_shader->Bind();
+            standard_shader->SetInt1("u_use_texture", 0);
+            standard_shader->SetMat4("u_MVP", camera->GetDirections());
+            renderer.DrawLines(*axes->vao, *axes->ibo, *standard_shader);
             glViewport(0, 0, width, height);
         }
         // endregion
@@ -296,11 +234,11 @@ int main() {
 
         // region Skybox
         {
-            skybox.shader->Bind();
-            skybox.shader->SetInt1("u_skybox", 0);
+            skybox->shader->Bind();
+            skybox->shader->SetInt1("u_skybox", 0);
             glm::mat4 inverse_PV = glm::inverse(P * glm::mat4(glm::mat3(V)));
-            skybox.shader->SetMat4("u_inv_PV", inverse_PV);
-            skybox.Draw();
+            skybox->shader->SetMat4("u_inv_PV", inverse_PV);
+            skybox->Draw();
         }
         // endregion
 
@@ -326,11 +264,11 @@ int main() {
             M = glm::rotate(M, glm::radians(float(time) * 30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
             M = glm::translate(M, -island_small_floating_stone.m_pivot);
 
-            phong_shader.Bind();
-            phong_shader.SetInt1("u_material.use_texture", 0);
-            phong_shader.SetMVP(VP * M, M, V);
-            phong_shader.SetMeshMaterial(island_small_floating_stone);
-            renderer.DrawTriangles(*island_small_floating_stone.vao, *island_small_floating_stone.ibo, phong_shader);
+            phong_shader->Bind();
+            phong_shader->SetInt1("u_material.use_texture", 0);
+            phong_shader->SetMVP(VP * M, M, V);
+            phong_shader->SetMeshMaterial(island_small_floating_stone);
+            renderer.DrawTriangles(*island_small_floating_stone.vao, *island_small_floating_stone.ibo, *phong_shader);
         }
 
         // endregion
@@ -338,47 +276,47 @@ int main() {
 //        {
 //            M = glm::translate(glm::mat4(1.0f), point);
 //            M = glm::scale(M, glm::vec3(0.5f));
-//            phong_shader.Bind();
-//            phong_shader.SetMVP(VP * M, M, V);
+//            phong_shader->Bind();
+//            phong_shader->SetMVP(VP * M, M, V);
 //            renderer.DrawTriangles(*island_small_floating_stone.vao, *island_small_floating_stone.ibo, phong_shader);
 //        }
 
         /*
-        // water cube
+//         water cube
         {
             LOG(glEnable(GL_BLEND));
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            water_shader.Bind();
-            skybox.BindTexture();
-            water_shader.SetVec3("u_camera_position", camera->GetPosition());
+            water_shader->Bind();
+            skybox->BindTexture();
+            water_shader->SetVec3("u_camera_position", camera->GetPosition());
             M = glm::mat4(1.0f);
 //            M = glm::translate(M, glm::vec3(0.0f, 0.0f, 3.0f));
 //            M = glm::rotate(M, glm::radians(float(time) * 100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 //            M = glm::translate(M, glm::vec3(0.0f, 0.0f, 0.0f));
-            water_shader.SetMat4("u_M", M);
-            water_shader.SetMat4("u_VP", VP);
-            water_shader.SetInt1("u_skybox", 0);
-            renderer.DrawTriangles(*cube.vao, *cube.ibo, water_shader);
+            water_shader->SetMat4("u_M", M);
+            water_shader->SetMat4("u_VP", VP);
+            water_shader->SetInt1("u_skybox", 0);
+            renderer.DrawTriangles(*cube->vao, *cube->ibo, *water_shader);
             LOG(glDisable(GL_BLEND));
         }
-         */
+//         */
 
 
         // region Water
         {
             LOG(glEnable(GL_BLEND));
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            water_shader.Bind();
-            skybox.BindTexture();
+            water_shader->Bind();
+            skybox->BindTexture();
             M = glm::mat4(1.0f);
             M = glm::translate(M, island_water.m_position);
             M = glm::scale(M, island_water.m_scale);
-            water_shader.SetVec3("u_camera_position", camera->GetPosition());
-            water_shader.SetMat4("u_M", M);
-            water_shader.SetMat4("u_VP", VP);
-            water_shader.SetInt1("u_skybox", 0);
-            water_shader.SetFloat1("u_time", std::cos(std::cos(float(time)) / 6));
-            renderer.DrawTriangles(*island_water.vao, *island_water.ibo, water_shader);
+            water_shader->SetVec3("u_camera_position", camera->GetPosition());
+            water_shader->SetMat4("u_M", M);
+            water_shader->SetMat4("u_VP", VP);
+            water_shader->SetInt1("u_skybox", 0);
+            water_shader->SetFloat1("u_time", std::cos(std::cos(float(time)) / 6));
+            renderer.DrawTriangles(*island_water.vao, *island_water.ibo, *water_shader);
             LOG(glDisable(GL_BLEND));
         }
         // endregion
@@ -393,7 +331,7 @@ int main() {
 
             ImGui::Begin("Debug");
 
-            ImGui::SliderFloat3("light position", &lamp.m_position.x, -25.0f, 25.0f);
+            ImGui::SliderFloat3("light position", &lamp->m_position.x, -25.0f, 25.0f);
 
             ImGui::Separator();
 
@@ -408,9 +346,9 @@ int main() {
 
             ImGui::Separator();
 
-            phong_shader.Bind();
-            phong_shader.SetVec3("point_lights[0].position", lamp.m_position);
-            phong_shader.SetVec3("sun.direction", V * glm::vec4(sun.m_direction, 1.0f));
+            phong_shader->Bind();
+            phong_shader->SetVec3("point_lights[0].position", lamp->m_position);
+            phong_shader->SetVec3("sun.direction", V * glm::vec4(sun->m_direction, 1.0f));
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
                         1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

@@ -1,5 +1,9 @@
 #include "window.h"
 #include <iostream>
+#include "configuration.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 // region Callbacks
 
@@ -29,6 +33,9 @@ void OnKeyEnter(GLFWwindow* window, int key, int scancode, int action, int mods)
     }
     if (action == GLFW_PRESS && key == GLFW_KEY_L) {
         camera->flashlight->m_on = !camera->flashlight->m_on;
+    }
+    if (action == GLFW_PRESS && key == GLFW_KEY_R) {
+        Configuration();
     }
 }
 
@@ -89,6 +96,17 @@ GLFWwindow* InitWindow(int width, int height) {
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
+
+
+    // region ImGui setup
+    ImGui::CreateContext();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
+    ImGui::StyleColorsDark();
+    // endregion
+
+    // Background color
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
     return window;
 }
