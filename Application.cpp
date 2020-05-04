@@ -2,18 +2,12 @@
 
 #include "camera.h"
 #include "window.h"
-#include "shader.h"
 #include "renderer.h"
-//#include "shapes/shapes.h"
-#include "mesh.h"
-#include "light.h"
-#include "texture.h"
 #include "configuration.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include <glm/gtx/spline.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 // Allocate pointer for camera
@@ -32,79 +26,12 @@ int main() {
 
     Camera* camera = Camera::GetInstance(window);
 
-    Configuration();
-
     glm::vec3 translate;
     glm::mat4 M;
 
-    // region Island
-    std::vector<Mesh*> island;
-
-    glm::vec3 island_position = glm::vec3(0.0f, -8.0f, 0.0f);
-//    glm::vec3 island_position = glm::vec3(0.0f, 0.0f, 0.0f);
-    Mesh island_ground_1("res/objects/island/island_ground_1.obj", island_position);
-    Mesh island_ground_2("res/objects/island/island_ground_2.obj", island_position);
-    Mesh island_mountains("res/objects/island/island_mountains.obj", island_position);
-    Mesh island_grass("res/objects/island/island_grass.obj", island_position);
-    Mesh island_water("res/objects/island/island_water.obj", island_position);
-    Mesh island_cloud_1("res/objects/island/island_cloud_1.obj", island_position);
-    Mesh island_cloud_2("res/objects/island/island_cloud_2.obj", island_position);
-    Mesh island_cloud_3("res/objects/island/island_cloud_3.obj", island_position);
-    Mesh island_cloud_4("res/objects/island/island_cloud_4.obj", island_position);
-    Mesh island_small_floating_stone("res/objects/island/island_small_floating_stone.obj", island_position);
-    Mesh island_red_gates("res/objects/island/island_red_gates.obj", island_position);
-    Mesh island_black_gates("res/objects/island/island_black_gates.obj", island_position);
-    Mesh island_stone_lamps("res/objects/island/island_stone_lamps.obj", island_position);
-    Mesh island_bridge("res/objects/island/island_bridge.obj", island_position, glm::vec3(1.1f, 1.0f, 1.1f));
-    Mesh island_trees_wood("res/objects/island/island_trees_wood.obj", island_position);
-    Mesh island_leaves_1("res/objects/island/island_leaves_1.obj", island_position);
-    Mesh island_leaves_2("res/objects/island/island_leaves_2.obj", island_position);
-    Mesh island_leaves_3("res/objects/island/island_leaves_3.obj", island_position);
-
-    island.push_back(&island_ground_1);
-    island.push_back(&island_ground_2);
-    island.push_back(&island_mountains);
-    island.push_back(&island_grass);
-//    island.push_back(&island_water);
-    island.push_back(&island_cloud_1);
-    island.push_back(&island_cloud_2);
-    island.push_back(&island_cloud_3);
-    island.push_back(&island_cloud_4);
-    island.push_back(&island_red_gates);
-    island.push_back(&island_black_gates);
-    island.push_back(&island_stone_lamps);
-//    island.push_back(&island_bridge);
-    island.push_back(&island_trees_wood);
-    island.push_back(&island_leaves_1);
-    island.push_back(&island_leaves_2);
-    island.push_back(&island_leaves_3);
-
-    // endregion
-
-    // region Control points for hermite curve
-    float t = 0.0f;
-
-    std::vector<glm::vec3> control_points;
-
-    control_points.emplace_back(0.0f, 0.0f, 0.0f);
-    control_points.emplace_back(-5.0f, 0.0f, 4.0f);
-
-    control_points.emplace_back(3.0f, 0.0f, 5.0f);
-    control_points.emplace_back(7.0f, 0.0f, 6.0f);
-
-    control_points.emplace_back(4.0f, 0.0f, 8.0f);
-    control_points.emplace_back(0.0f, 0.0f, 6.0f);
-
-    control_points.emplace_back(3.0f, 0.0f, 5.0f);
-    control_points.emplace_back(5.0f, 0.0f, 2.0f);
-
-    control_points.emplace_back(0.0f, 0.0f, 0.0f);
-    control_points.emplace_back(-5.0f, 0.0f, 4.0f);
-    // endregion
-
     Renderer renderer;
 
-    Configuration();
+    Configuration configuration;
 
     do {
         renderer.Clear();
@@ -141,11 +68,11 @@ int main() {
         // region Bridge (manual element)
         {
             M = glm::mat4(1.0f);
-            M = glm::translate(M, island_bridge.m_position);
+            M = glm::translate(M, island_bridge->m_position);
             phong_shader->Bind();
             phong_shader->SetInt1("u_material.use_texture", 0);
             phong_shader->SetMVP(VP * M, M, V);
-            phong_shader->SetMeshMaterial(island_bridge);
+            phong_shader->SetMeshMaterial(*island_bridge);
             renderer.DrawTriangles(*bridge->vao, *bridge->ibo, *phong_shader);
         }
         // endregion
@@ -171,8 +98,6 @@ int main() {
             sun->m_direction[0] = 5000 * glm::sin(time * .5);
             sun->m_direction[1] = 10000;
             sun->m_direction[2] = 5000 * glm::cos(time * .5);
-
-
             sun->m_direction = glm::vec4(sun->m_direction, 1);
             translate = glm::vec3(sun->m_direction[0] / 100, sun->m_direction[1] / 100, sun->m_direction[2] / 100);
             M = glm::translate(glm::mat4(1.0f), translate);
@@ -199,7 +124,7 @@ int main() {
 
 
         {
-            for (const Mesh* island_part : island) {
+            for (const Mesh* island_part : *island) {
                 M = glm::mat4(1.0f);
                 M = glm::translate(M, island_part->m_position);
                 M = glm::scale(M, island_part->m_scale);
@@ -245,30 +170,25 @@ int main() {
 
         // region Small island
         {
-            t = float(time / 3.0f);
-            int t_i = (int(t) % 4) * 2;
-            glm::vec3 point = glm::hermite(control_points[0 + t_i], control_points[1 + t_i],
-                                           control_points[2 + t_i], control_points[3 + t_i],
-                                           glm::mod(t, 1.0f));
+            glm::vec3 point = hermite_curve->CalculatePosition(float(time / 3.0f));
 
-
-            island_small_floating_stone.m_position[0] = point[0];
-            island_small_floating_stone.m_position[2] = point[2];
+            island_small_floating_stone->m_position[0] = point[0];
+            island_small_floating_stone->m_position[2] = point[2];
 
             M = glm::mat4(1.0f);
-            M = glm::translate(M, island_small_floating_stone.m_position);
-            M = glm::scale(M, island_small_floating_stone.m_scale);
+            M = glm::translate(M, island_small_floating_stone->m_position);
+            M = glm::scale(M, island_small_floating_stone->m_scale);
 
             // Rotate small island
-            M = glm::translate(M, island_small_floating_stone.m_pivot);
+            M = glm::translate(M, island_small_floating_stone->m_pivot);
             M = glm::rotate(M, glm::radians(float(time) * 30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-            M = glm::translate(M, -island_small_floating_stone.m_pivot);
+            M = glm::translate(M, -island_small_floating_stone->m_pivot);
 
             phong_shader->Bind();
             phong_shader->SetInt1("u_material.use_texture", 0);
             phong_shader->SetMVP(VP * M, M, V);
-            phong_shader->SetMeshMaterial(island_small_floating_stone);
-            renderer.DrawTriangles(*island_small_floating_stone.vao, *island_small_floating_stone.ibo, *phong_shader);
+            phong_shader->SetMeshMaterial(*island_small_floating_stone);
+            renderer.DrawTriangles(*island_small_floating_stone->vao, *island_small_floating_stone->ibo, *phong_shader);
         }
 
         // endregion
@@ -278,10 +198,10 @@ int main() {
 //            M = glm::scale(M, glm::vec3(0.5f));
 //            phong_shader->Bind();
 //            phong_shader->SetMVP(VP * M, M, V);
-//            renderer.DrawTriangles(*island_small_floating_stone.vao, *island_small_floating_stone.ibo, phong_shader);
+//            renderer.DrawTriangles(*island_small_floating_stone->vao, *island_small_floating_stone->ibo, phong_shader);
 //        }
 
-        /*
+//        /*
 //         water cube
         {
             LOG(glEnable(GL_BLEND));
@@ -309,14 +229,14 @@ int main() {
             water_shader->Bind();
             skybox->BindTexture();
             M = glm::mat4(1.0f);
-            M = glm::translate(M, island_water.m_position);
-            M = glm::scale(M, island_water.m_scale);
+            M = glm::translate(M, island_water->m_position);
+            M = glm::scale(M, island_water->m_scale);
             water_shader->SetVec3("u_camera_position", camera->GetPosition());
             water_shader->SetMat4("u_M", M);
             water_shader->SetMat4("u_VP", VP);
             water_shader->SetInt1("u_skybox", 0);
             water_shader->SetFloat1("u_time", std::cos(std::cos(float(time)) / 6));
-            renderer.DrawTriangles(*island_water.vao, *island_water.ibo, *water_shader);
+            renderer.DrawTriangles(*island_water->vao, *island_water->ibo, *water_shader);
             LOG(glDisable(GL_BLEND));
         }
         // endregion
@@ -338,11 +258,11 @@ int main() {
 //            ImGui::ColorPicker3("island diffuse", &island_ground_2.m_diffuse.x);
 //            ImGui::SliderFloat3("island diffuse", &island_ground_2.m_diffuse.x, 0.0f, 1.0f);
 
-            ImGui::SliderFloat("time", &t, 0.0f, 2.0f);
+//            ImGui::SliderFloat("time", &t, 0.0f, 2.0f);
 
             glm::vec3 m_position = camera->m_position;
             ImGui::SliderFloat3("m_position", &m_position.x, -10.0f, 10.0f);
-            ImGui::SliderFloat3("stone pos", &island_small_floating_stone.m_position.x, -10.0f, 10.0f);
+            ImGui::SliderFloat3("stone pos", &island_small_floating_stone->m_position.x, -10.0f, 10.0f);
 
             ImGui::Separator();
 

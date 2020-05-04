@@ -32,14 +32,7 @@ unsigned int LoadCubeMap(std::vector<std::string> faces) {
 }
 
 Skybox::Skybox() {
-    std::vector<std::string> faces{
-//            "res/textures/skybox/night/left.png",
-//            "res/textures/skybox/night/right.png",
-//            "res/textures/skybox/night/bottom.png",
-//            "res/textures/skybox/night/top.png",
-//            "res/textures/skybox/night/front.png",
-//            "res/textures/skybox/night/back.png",
-
+    std::vector<std::string> faces_day{
             "res/textures/skybox/day/left.jpg",
             "res/textures/skybox/day/right.jpg",
             "res/textures/skybox/day/bottom.jpg",
@@ -48,7 +41,18 @@ Skybox::Skybox() {
             "res/textures/skybox/day/back.jpg",
     };
 
-    m_cube_map_texture_id = LoadCubeMap(faces);
+    std::vector<std::string> faces_night{
+            "res/textures/skybox/night/left.png",
+            "res/textures/skybox/night/right.png",
+            "res/textures/skybox/night/bottom.png",
+            "res/textures/skybox/night/top.png",
+            "res/textures/skybox/night/front.png",
+            "res/textures/skybox/night/back.png",
+    };
+
+    m_cube_map_texture_day_id = LoadCubeMap(faces_day);
+
+    m_cube_map_texture_night_id = LoadCubeMap(faces_night);
 
     static const float coords[] = {
             -1.0f, -1.0f,
@@ -71,7 +75,7 @@ Skybox::Skybox() {
 
 void Skybox::BindTexture() const {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_cube_map_texture_id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_is_day ? m_cube_map_texture_day_id : m_cube_map_texture_night_id);
 }
 
 void Skybox::Draw() const {
@@ -86,4 +90,9 @@ void Skybox::Draw() const {
     glBindVertexArray(0);
     // set depth function back to default
     glDepthFunc(GL_LESS);
+}
+
+
+void Skybox::ChangeSkybox() {
+    m_is_day = !m_is_day;
 }

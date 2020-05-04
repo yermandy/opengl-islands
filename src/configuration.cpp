@@ -13,6 +13,10 @@ Axes* axes = nullptr;
 Mesh* cube = nullptr;
 Mesh* sun_object = nullptr;
 Mesh* lamp_mesh = nullptr;
+Mesh* island_water = nullptr;
+Mesh* island_bridge = nullptr;
+Mesh* island_small_floating_stone = nullptr;
+std::vector<Mesh*>* island = nullptr;
 // endregion
 
 
@@ -36,18 +40,57 @@ Texture* sun_texture = nullptr;
 // endregion
 
 
+// region curves
+Hermite* hermite_curve = nullptr;
+// endregion
+
+
 Configuration::Configuration() {
     Camera* camera = Camera::GetInstance();
-
-    // region objects
-    bridge = new Bridge();
-    skybox = new Skybox();
-    // endregion
 
     // region meshes
     cube = new Mesh("res/objects/cube.obj");
     sun_object = new Mesh("res/objects/sun.obj");
     lamp_mesh = new Mesh("res/objects/cube.obj", glm::vec3(0.0f, -5.0f, 0.0f));
+
+    glm::vec3 island_position = glm::vec3(0.0f, -8.0f, 0.0f);
+    Mesh* island_ground_1 = new Mesh("res/objects/island/island_ground_1.obj", island_position);
+    Mesh* island_ground_2 = new Mesh("res/objects/island/island_ground_2.obj", island_position);
+    Mesh* island_mountains = new Mesh("res/objects/island/island_mountains.obj", island_position);
+    Mesh* island_grass = new Mesh("res/objects/island/island_grass.obj", island_position);
+    Mesh* island_cloud_1 = new Mesh("res/objects/island/island_cloud_1.obj", island_position);
+    Mesh* island_cloud_2 = new Mesh("res/objects/island/island_cloud_2.obj", island_position);
+    Mesh* island_cloud_3 = new Mesh("res/objects/island/island_cloud_3.obj", island_position);
+    Mesh* island_cloud_4 = new Mesh("res/objects/island/island_cloud_4.obj", island_position);
+    Mesh* island_red_gates = new Mesh("res/objects/island/island_red_gates.obj", island_position);
+    Mesh* island_black_gates = new Mesh("res/objects/island/island_black_gates.obj", island_position);
+    Mesh* island_stone_lamps = new Mesh("res/objects/island/island_stone_lamps.obj", island_position);
+    Mesh* island_trees_wood = new Mesh("res/objects/island/island_trees_wood.obj", island_position);
+    Mesh* island_leaves_1 = new Mesh("res/objects/island/island_leaves_1.obj", island_position);
+    Mesh* island_leaves_2 = new Mesh("res/objects/island/island_leaves_2.obj", island_position);
+    Mesh* island_leaves_3 = new Mesh("res/objects/island/island_leaves_3.obj", island_position);
+
+    island = new std::vector<Mesh*>();
+    island->push_back(island_ground_1);
+    island->push_back(island_ground_2);
+    island->push_back(island_mountains);
+    island->push_back(island_grass);
+    island->push_back(island_cloud_1);
+    island->push_back(island_cloud_2);
+    island->push_back(island_cloud_3);
+    island->push_back(island_cloud_4);
+    island->push_back(island_red_gates);
+    island->push_back(island_black_gates);
+    island->push_back(island_stone_lamps);
+    island->push_back(island_trees_wood);
+    island->push_back(island_leaves_1);
+    island->push_back(island_leaves_2);
+    island->push_back(island_leaves_3);
+
+    island_water = new Mesh("res/objects/island/island_water.obj", island_position);
+    island_bridge = new Mesh("res/objects/island/island_bridge.obj", island_position,
+                             glm::vec3(1.1f, 1.0f, 1.1f));
+    island_small_floating_stone = new Mesh("res/objects/island/island_small_floating_stone.obj", island_position);
     // endregion
 
 
@@ -112,18 +155,30 @@ Configuration::Configuration() {
     texture = new Texture("res/textures/cloud_texture.jpg");
     sun_texture = new Texture("res/textures/sun_texture.jpg");
     // endregion
+
+
+    // region objects
+    bridge = new Bridge();
+    skybox = new Skybox();
+    axes = new Axes();
+    // endregion
+
+
+    // region curves
+    hermite_curve = new Hermite(
+            {
+                    {0.0f,  0.0f, 0.0f},
+                    {-5.0f, 0.0f, 4.0f},
+                    {3.0f,  0.0f, 5.0f},
+                    {7.0f,  0.0f, 6.0f},
+                    {4.0f,  0.0f, 8.0f},
+                    {0.0f,  0.0f, 6.0f},
+                    {3.0f,  0.0f, 5.0f},
+                    {5.0f,  0.0f, 2.0f},
+                    {0.0f,  0.0f, 0.0f},
+                    {-5.0f, 0.0f, 4.0f}
+            });
+    // endregion
 }
 
-Configuration::~Configuration() {
-//    delete cube;
-//    delete sun_object;
-//    delete lamp_mesh;
-//
-//    delete sun;
-//    delete lamp;
-//    delete flashlight;
-//
-//    delete phong_shader;
-//    delete standard_shader;
-//    delete water_shader;
-}
+Configuration::~Configuration() {}
