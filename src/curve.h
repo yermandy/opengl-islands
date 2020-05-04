@@ -12,4 +12,5 @@ public:
 
 private:
     std::vector<glm::vec3> m_control_points;
+    unsigned int m_size = 0;
 };
