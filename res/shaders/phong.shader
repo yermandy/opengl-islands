@@ -113,6 +113,7 @@ uniform DirectionalLight sun;
 uniform SpotLight flashlight;
 
 uniform bool fog;
+uniform bool sun_shines = true;
 uniform float fog_density = 0.1f;
 
 in vec3 v_position_worldspace;
@@ -207,7 +208,8 @@ void main() {
     // Eye vector (towards the camera)
     vec3 E = normalize(eye_direction_cameraspace);
     // Add directional light (sun)
-    color += GetDirectionalLight(sun, N, E);
+    if (sun_shines)
+        color += GetDirectionalLight(sun, N, E);
     // Add all point light sources
     for (int i = 0; i < N_POINT_LIGHTS; i++)
         color += GetPointLight(point_lights[i], N, v_position_worldspace, E);

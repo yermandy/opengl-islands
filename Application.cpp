@@ -47,6 +47,41 @@ int main() {
         double time = glfwGetTime();
         auto delta_time = float(time - last_time);
 
+        // region Flashlight
+        {
+            phong_shader->Bind();
+            phong_shader->SetInt1("flashlight.on", flashlight->m_on);
+            if (flashlight->m_on) {
+                flashlight->m_direction = camera->m_direction;
+                flashlight->m_position = camera->m_position;
+
+                phong_shader->SetVec3("flashlight.position", flashlight->m_position);
+                phong_shader->SetVec3("flashlight.direction", flashlight->m_direction);
+            }
+        }
+        // endregion
+
+
+        // region Sun
+        {
+            sun->m_direction[0] = 5000 * glm::sin(time * .5);
+            sun->m_direction[1] = 10000;
+            sun->m_direction[2] = 5000 * glm::cos(time * .5);
+            sun->m_direction = glm::vec4(sun->m_direction, 1);
+            translate = glm::vec3(sun->m_direction[0] / 100, sun->m_direction[1] / 100, sun->m_direction[2] / 100);
+            M = glm::translate(glm::mat4(1.0f), translate);
+            M = glm::scale(M, glm::vec3(2.0f));
+            M = glm::rotate(M, glm::radians(float(time) * 100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            standard_shader->Bind();
+            sun_object->m_texture->Bind();
+            standard_shader->SetInt1("u_tex_sampler", 0);
+            standard_shader->SetInt1("u_use_texture", 1);
+            standard_shader->SetMat4("u_MVP", VP * M);
+            renderer.DrawTriangles(*sun_object->vao, *sun_object->ibo, *standard_shader);
+        }
+        // endregion
+
+
         // region Buttons
         {
             glEnable(GL_STENCIL_TEST);
@@ -86,21 +121,6 @@ int main() {
         // endregion
 
 
-        // region Flashlight
-        {
-            phong_shader->Bind();
-            phong_shader->SetInt1("flashlight.on", flashlight->m_on);
-            if (flashlight->m_on) {
-                flashlight->m_direction = camera->m_direction;
-                flashlight->m_position = camera->m_position;
-
-                phong_shader->SetVec3("flashlight.position", flashlight->m_position);
-                phong_shader->SetVec3("flashlight.direction", flashlight->m_direction);
-            }
-        }
-        // endregion
-
-
         // region Bridge (manual element)
         {
             M = glm::mat4(1.0f);
@@ -114,34 +134,14 @@ int main() {
         // endregion
 
 
-        // region Sun
-        {
-            sun->m_direction[0] = 5000 * glm::sin(time * .5);
-            sun->m_direction[1] = 10000;
-            sun->m_direction[2] = 5000 * glm::cos(time * .5);
-            sun->m_direction = glm::vec4(sun->m_direction, 1);
-            translate = glm::vec3(sun->m_direction[0] / 100, sun->m_direction[1] / 100, sun->m_direction[2] / 100);
-            M = glm::translate(glm::mat4(1.0f), translate);
-            M = glm::scale(M, glm::vec3(2.0f));
-            M = glm::rotate(M, glm::radians(float(time) * 100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-            standard_shader->Bind();
-            sun_object->m_texture->Bind();
-            standard_shader->SetInt1("u_tex_sampler", 0);
-            standard_shader->SetInt1("u_use_texture", 1);
-            standard_shader->SetMat4("u_MVP", VP * M);
-            renderer.DrawTriangles(*sun_object->vao, *sun_object->ibo, *standard_shader);
-        }
-        // endregion
-
-
-        {
-            M = glm::translate(glm::mat4(1.0f), lamp->m_position);
-            M = glm::scale(M, glm::vec3(0.1f));
-            standard_shader->Bind();
-            standard_shader->SetInt1("u_use_texture", 0);
-            standard_shader->SetMat4("u_MVP", VP * M);
-            renderer.DrawTriangles(*lamp_mesh->vao, *lamp_mesh->ibo, *standard_shader);
-        }
+//        {
+//            M = glm::translate(glm::mat4(1.0f), lamp->m_position);
+//            M = glm::scale(M, glm::vec3(0.1f));
+//            standard_shader->Bind();
+//            standard_shader->SetInt1("u_use_texture", 0);
+//            standard_shader->SetMat4("u_MVP", VP * M);
+//            renderer.DrawTriangles(*lamp_mesh->vao, *lamp_mesh->ibo, *standard_shader);
+//        }
 
         // region Island clouds
         {
@@ -296,7 +296,7 @@ int main() {
 
             ImGui::Begin("Debug");
 
-            ImGui::SliderFloat3("light position", &lamp->m_position.x, -25.0f, 25.0f);
+//            ImGui::SliderFloat3("light position", &lamp->m_position.x, -25.0f, 25.0f);
 
             ImGui::Separator();
 

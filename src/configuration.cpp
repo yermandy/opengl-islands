@@ -77,6 +77,19 @@ Configuration::Configuration() {
     Mesh* island_leaves_2 = new Mesh("res/objects/island/island_leaves_2.obj", island_position);
     Mesh* island_leaves_3 = new Mesh("res/objects/island/island_leaves_3.obj", island_position);
 
+    Mesh* lamp_light = new Mesh("res/objects/lamp/lamp_light.obj", island_position);
+    Mesh* lamp_stone = new Mesh("res/objects/lamp/lamp_stone.obj", island_position);
+    Mesh* lamp_stone_2 = new Mesh("res/objects/lamp/lamp_stone_2.obj", island_position);
+    Mesh* lamp_wood = new Mesh("res/objects/lamp/lamp_wood.obj", island_position);
+
+    Mesh* island_2_grass = new Mesh("res/objects/island_2/island_2_grass.obj", island_position);
+    Mesh* island_2_snow = new Mesh("res/objects/island_2/island_2_snow.obj", island_position);
+    Mesh* island_2_snow_floor = new Mesh("res/objects/island_2/island_2_snow_floor.obj", island_position);
+    Mesh* island_2_stone = new Mesh("res/objects/island_2/island_2_stone.obj", island_position);
+    Mesh* island_2_tree_leaves = new Mesh("res/objects/island_2/island_2_tree_leaves.obj", island_position);
+    Mesh* island_2_tree_wood = new Mesh("res/objects/island_2/island_2_tree_wood.obj", island_position);
+    Mesh* island_2_clouds = new Mesh("res/objects/island_2/island_2_clouds.obj", island_position);
+
     island = new std::vector<Mesh*>();
     island->push_back(island_ground_1);
     island->push_back(island_ground_2);
@@ -89,6 +102,19 @@ Configuration::Configuration() {
     island->push_back(island_leaves_1);
     island->push_back(island_leaves_2);
     island->push_back(island_leaves_3);
+
+    island->push_back(lamp_light);
+    island->push_back(lamp_stone);
+    island->push_back(lamp_stone_2);
+    island->push_back(lamp_wood);
+
+    island->push_back(island_2_grass);
+    island->push_back(island_2_snow);
+    island->push_back(island_2_snow_floor);
+    island->push_back(island_2_stone);
+    island->push_back(island_2_tree_leaves);
+    island->push_back(island_2_tree_wood);
+    island->push_back(island_2_clouds);
 
     // initialize clouds
     Mesh* island_cloud_1 = new Mesh("res/objects/island/island_cloud_1.obj", island_position);
@@ -129,7 +155,7 @@ Configuration::Configuration() {
     lamp = new PointLight(glm::vec3(0.1f),
                           glm::vec3(1.0f),
                           glm::vec3(1.0f),
-                          glm::vec3(0.0f, -3.0f, 1.5f));
+                          glm::vec3(2.4f, -3.7f, 0.3f));
 
     flashlight = new SpotLight(glm::vec3(0.2f),
                                glm::vec3(1.0f),
