@@ -33,7 +33,6 @@ int main() {
 
     Configuration configuration;
 
-    double hermite_time = 0.0f;
 
     do {
         renderer.Clear();
@@ -48,7 +47,7 @@ int main() {
         double time = glfwGetTime();
         auto delta_time = float(time - last_time);
 
-        // region buttons
+        // region Buttons
         {
             glEnable(GL_STENCIL_TEST);
             glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -71,13 +70,15 @@ int main() {
                 renderer.DrawTriangles(*button->vao, *button->ibo, *phong_shader);
             }
 
-            glReadPixels(int(width / 2), int(height / 2), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &camera->looking_at_object);
+            glReadPixels(int(width / 2), int(height / 2), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE,
+                         &camera->looking_at_object);
 
             camera->distance_to_picking_object = 0;
 
             if (camera->looking_at_object != 0) {
                 Mesh* button = (*buttons)[camera->looking_at_object - 1];
-                camera->distance_to_picking_object = glm::distance(button->m_pivot + button->m_position, camera->m_position);
+                camera->distance_to_picking_object = glm::distance(button->m_pivot + button->m_position,
+                                                                   camera->m_position);
             }
 
             glDisable(GL_STENCIL_TEST);
@@ -142,7 +143,27 @@ int main() {
             renderer.DrawTriangles(*lamp_mesh->vao, *lamp_mesh->ibo, *standard_shader);
         }
 
+        // region Island clouds
+        {
+            for (Mesh* cloud : *island_clouds) {
+                M = glm::mat4(1.0f);
+                M = glm::translate(M, cloud->m_position);
+                if (clouds_moving) {
+                    cloud->m_time += delta_time;
+                    M = glm::rotate(M, glm::radians(float(cloud->m_time) * 10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                }
+                M = glm::scale(M, cloud->m_scale);
+                phong_shader->Bind();
+                phong_shader->SetInt1("u_material.use_texture", 0);
+                phong_shader->SetMVP(VP * M, M, V);
+                phong_shader->SetMeshMaterial(*cloud);
+                renderer.DrawTriangles(*cloud->vao, *cloud->ibo, *phong_shader);
+            }
+        }
+        // endregion
 
+
+        // region Island
         {
             for (const Mesh* island_part : *island) {
                 M = glm::mat4(1.0f);
@@ -155,6 +176,7 @@ int main() {
                 renderer.DrawTriangles(*island_part->vao, *island_part->ibo, *phong_shader);
             }
         }
+        // endregion
 
 //        {
 //            M = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -191,8 +213,8 @@ int main() {
         // region Small island
         {
             if (island_moving) {
-                hermite_time += delta_time;
-                glm::vec3 point = hermite_curve->CalculatePosition(float(hermite_time / 2000.0f));
+                island_small_floating_stone->m_time += delta_time;
+                glm::vec3 point = hermite_curve->CalculatePosition(float(island_small_floating_stone->m_time / 3.0f));
 
                 island_small_floating_stone->m_position[0] = point[0];
                 island_small_floating_stone->m_position[2] = point[2];
@@ -307,6 +329,7 @@ int main() {
         // Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
+        last_time = time;
 
     } while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS
              && !glfwWindowShouldClose(window));

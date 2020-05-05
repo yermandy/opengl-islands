@@ -17,6 +17,7 @@ Mesh* island_water = nullptr;
 Mesh* island_bridge = nullptr;
 Mesh* island_small_floating_stone = nullptr;
 std::vector<Mesh*>* island = nullptr;
+std::vector<Mesh*>* island_clouds = nullptr;
 Mesh* button_1 = nullptr;
 Mesh* button_2 = nullptr;
 Mesh* button_3 = nullptr;
@@ -62,14 +63,12 @@ Configuration::Configuration() {
     lamp_mesh = new Mesh("res/objects/cube.obj", glm::vec3(0.0f, -5.0f, 0.0f));
 
     glm::vec3 island_position = glm::vec3(0.0f, -8.0f, 0.0f);
+
+    // initialize island
     Mesh* island_ground_1 = new Mesh("res/objects/island/island_ground_1.obj", island_position);
     Mesh* island_ground_2 = new Mesh("res/objects/island/island_ground_2.obj", island_position);
     Mesh* island_mountains = new Mesh("res/objects/island/island_mountains.obj", island_position);
     Mesh* island_grass = new Mesh("res/objects/island/island_grass.obj", island_position);
-    Mesh* island_cloud_1 = new Mesh("res/objects/island/island_cloud_1.obj", island_position);
-    Mesh* island_cloud_2 = new Mesh("res/objects/island/island_cloud_2.obj", island_position);
-    Mesh* island_cloud_3 = new Mesh("res/objects/island/island_cloud_3.obj", island_position);
-    Mesh* island_cloud_4 = new Mesh("res/objects/island/island_cloud_4.obj", island_position);
     Mesh* island_red_gates = new Mesh("res/objects/island/island_red_gates.obj", island_position);
     Mesh* island_black_gates = new Mesh("res/objects/island/island_black_gates.obj", island_position);
     Mesh* island_stone_lamps = new Mesh("res/objects/island/island_stone_lamps.obj", island_position);
@@ -83,10 +82,6 @@ Configuration::Configuration() {
     island->push_back(island_ground_2);
     island->push_back(island_mountains);
     island->push_back(island_grass);
-    island->push_back(island_cloud_1);
-    island->push_back(island_cloud_2);
-    island->push_back(island_cloud_3);
-    island->push_back(island_cloud_4);
     island->push_back(island_red_gates);
     island->push_back(island_black_gates);
     island->push_back(island_stone_lamps);
@@ -95,11 +90,25 @@ Configuration::Configuration() {
     island->push_back(island_leaves_2);
     island->push_back(island_leaves_3);
 
+    // initialize clouds
+    Mesh* island_cloud_1 = new Mesh("res/objects/island/island_cloud_1.obj", island_position);
+    Mesh* island_cloud_2 = new Mesh("res/objects/island/island_cloud_2.obj", island_position);
+    Mesh* island_cloud_3 = new Mesh("res/objects/island/island_cloud_3.obj", island_position);
+    Mesh* island_cloud_4 = new Mesh("res/objects/island/island_cloud_4.obj", island_position);
+
+    island_clouds = new std::vector<Mesh*>();
+    island_clouds->push_back(island_cloud_1);
+    island_clouds->push_back(island_cloud_2);
+    island_clouds->push_back(island_cloud_3);
+    island_clouds->push_back(island_cloud_4);
+
+    // initialize all other meshes
     island_water = new Mesh("res/objects/island/island_water.obj", island_position);
     island_bridge = new Mesh("res/objects/island/island_bridge.obj", island_position,
                              glm::vec3(1.1f, 1.0f, 1.1f));
     island_small_floating_stone = new Mesh("res/objects/island/island_small_floating_stone.obj", island_position);
 
+    // initialize action buttons
     button_1 = new Mesh("res/objects/buttons/button_1.obj", island_position);
     button_2 = new Mesh("res/objects/buttons/button_2.obj", island_position);
     button_3 = new Mesh("res/objects/buttons/button_3.obj", island_position);

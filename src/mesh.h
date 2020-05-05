@@ -31,4 +31,5 @@ public:
     float m_shininess = 1.0f;
 
     unsigned int m_picking_id = 0;
+    double m_time = 0.0f;
 };
