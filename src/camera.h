@@ -86,5 +86,6 @@ public:
     glm::vec3 m_direction = glm::vec3(0.0f); // Camera direction
 
     SpotLight* flashlight;
+    bool fog = false;
 
 };

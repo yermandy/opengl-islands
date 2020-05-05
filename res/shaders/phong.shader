@@ -112,6 +112,9 @@ uniform PointLight point_lights[N_POINT_LIGHTS];
 uniform DirectionalLight sun;
 uniform SpotLight flashlight;
 
+uniform bool fog;
+uniform float fog_density = 0.1f;
+
 in vec3 v_position_worldspace;
 in vec3 v_normal_cameraspace;
 in vec3 eye_direction_cameraspace;
@@ -214,4 +217,8 @@ void main() {
     // Mix color with texture
     if (u_material.use_texture)
         color = mix(color, texture(u_tex_sampler, v_uv).rgb, 0.5);
+    if (fog) {
+        float d = distance(eye_direction_cameraspace, v_position_worldspace);
+        color = mix(color, vec3(0.5, 0.5, 0.5), 1 - exp(- (d * fog_density)));
+    }
 }

@@ -40,6 +40,15 @@ void OnKeyEnter(GLFWwindow* window, int key, int scancode, int action, int mods)
     else if (action == GLFW_PRESS && key == GLFW_KEY_N) {
         skybox->ChangeSkybox();
     }
+    else if (action == GLFW_PRESS && key == GLFW_KEY_F) {
+        camera->fog = !camera->fog;
+        phong_shader->Bind();
+        phong_shader->SetInt1("fog", camera->fog);
+        water_shader->Bind();
+        water_shader->SetInt1("fog", camera->fog);
+        skybox->shader->Bind();
+        skybox->shader->SetInt1("fog", camera->fog);
+    }
 }
 
 // endregion

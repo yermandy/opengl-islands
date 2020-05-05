@@ -21,9 +21,12 @@ out vec4 color;
 
 in vec3 v_tex_coord;
 
+uniform bool fog;
 uniform samplerCube u_skybox;
 
 void main()
 {
     color = texture(u_skybox, v_tex_coord);
+    if (fog)
+        color = vec4(0.5, 0.5, 0.5, 1);
 }
