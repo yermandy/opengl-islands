@@ -87,5 +87,8 @@ public:
 
     SpotLight* flashlight;
     bool fog = false;
+    unsigned int looking_at_object = 0;
+    float distance_to_picking_object = 0.0f;
+
 
 };

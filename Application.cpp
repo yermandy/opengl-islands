@@ -33,6 +33,8 @@ int main() {
 
     Configuration configuration;
 
+    double hermite_time = 0.0f;
+
     do {
         renderer.Clear();
 
@@ -41,39 +43,44 @@ int main() {
         glm::mat4 V = camera->GetMatView();
         glm::mat4 VP = P * V;
 
+        static double last_time = glfwGetTime();
+
         double time = glfwGetTime();
+        auto delta_time = float(time - last_time);
 
-//        for (float i = -10; i < 11.0; i += 2.001) {
-//            for (float  j = -10; j < 11.0;  j += 2.001) {
-//                translate = glm::translate(glm::mat4(1.0f), glm::vec3(i, j, .0f));
-//                standard_shader->Bind();
-//                standard_shader->SetMat4("u_MVP", VP * translate);
-//                renderer.DrawTriangles(*cube.vao, *cube.ibo, standard_shader);
-//            }
-//        }
-
-//        {
-//            M = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));
-//            phong_shader->Bind();
-//            texture.Bind();
-//            phong_shader->SetMVP(VP * M, M, V);
-//            phong_shader->SetMeshMaterial(test_mesh);
-//            phong_shader->SetInt1("u_tex_sampler", 0);
-//            phong_shader->SetInt1("u_material.use_texture", 1);
-//            renderer.DrawTriangles(*test_mesh.vao, *test_mesh.ibo, phong_shader);
-//            phong_shader->SetInt1("u_material.use_texture", 0);
-//        }
-
-
-        // region Bridge (manual element)
+        // region buttons
         {
-            M = glm::mat4(1.0f);
-            M = glm::translate(M, island_bridge->m_position);
-            phong_shader->Bind();
-            phong_shader->SetInt1("u_material.use_texture", 0);
-            phong_shader->SetMVP(VP * M, M, V);
-            phong_shader->SetMeshMaterial(*island_bridge);
-            renderer.DrawTriangles(*bridge->vao, *bridge->ibo, *phong_shader);
+            glEnable(GL_STENCIL_TEST);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+            unsigned int picking_id = 0;
+            for (auto button : *buttons) {
+                glStencilFunc(GL_ALWAYS, ++picking_id, -1);
+                M = glm::mat4(1.0f);
+                M = glm::translate(M, button->m_position);
+                M = glm::scale(M, button->m_scale);
+
+                M = glm::translate(M, button->m_pivot);
+                M = glm::rotate(M, glm::radians(float(time) * 30.0f), glm::vec3(0.5f, 1.0f - picking_id, 0.0f));
+                M = glm::translate(M, -button->m_pivot);
+
+                button->m_picking_id = picking_id;
+                phong_shader->Bind();
+                phong_shader->SetMVP(VP * M, M, V);
+                phong_shader->SetMeshMaterial(*button);
+                renderer.DrawTriangles(*button->vao, *button->ibo, *phong_shader);
+            }
+
+            glReadPixels(int(width / 2), int(height / 2), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &camera->looking_at_object);
+
+            camera->distance_to_picking_object = 0;
+
+            if (camera->looking_at_object != 0) {
+                Mesh* button = (*buttons)[camera->looking_at_object - 1];
+                camera->distance_to_picking_object = glm::distance(button->m_pivot + button->m_position, camera->m_position);
+            }
+
+            glDisable(GL_STENCIL_TEST);
         }
         // endregion
 
@@ -89,6 +96,19 @@ int main() {
                 phong_shader->SetVec3("flashlight.position", flashlight->m_position);
                 phong_shader->SetVec3("flashlight.direction", flashlight->m_direction);
             }
+        }
+        // endregion
+
+
+        // region Bridge (manual element)
+        {
+            M = glm::mat4(1.0f);
+            M = glm::translate(M, island_bridge->m_position);
+            phong_shader->Bind();
+            phong_shader->SetInt1("u_material.use_texture", 0);
+            phong_shader->SetMVP(VP * M, M, V);
+            phong_shader->SetMeshMaterial(*island_bridge);
+            renderer.DrawTriangles(*bridge->vao, *bridge->ibo, *phong_shader);
         }
         // endregion
 
@@ -170,10 +190,13 @@ int main() {
 
         // region Small island
         {
-            glm::vec3 point = hermite_curve->CalculatePosition(float(time / 3.0f));
+            if (island_moving) {
+                hermite_time += delta_time;
+                glm::vec3 point = hermite_curve->CalculatePosition(float(hermite_time / 2000.0f));
 
-            island_small_floating_stone->m_position[0] = point[0];
-            island_small_floating_stone->m_position[2] = point[2];
+                island_small_floating_stone->m_position[0] = point[0];
+                island_small_floating_stone->m_position[2] = point[2];
+            }
 
             M = glm::mat4(1.0f);
             M = glm::translate(M, island_small_floating_stone->m_position);
@@ -201,7 +224,7 @@ int main() {
 //            renderer.DrawTriangles(*island_small_floating_stone->vao, *island_small_floating_stone->ibo, phong_shader);
 //        }
 
-//        /*
+        /*
 //         water cube
         {
             LOG(glEnable(GL_BLEND));

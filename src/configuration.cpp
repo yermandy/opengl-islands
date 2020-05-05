@@ -17,6 +17,10 @@ Mesh* island_water = nullptr;
 Mesh* island_bridge = nullptr;
 Mesh* island_small_floating_stone = nullptr;
 std::vector<Mesh*>* island = nullptr;
+Mesh* button_1 = nullptr;
+Mesh* button_2 = nullptr;
+Mesh* button_3 = nullptr;
+std::vector<Mesh*>* buttons = nullptr;
 // endregion
 
 
@@ -43,6 +47,10 @@ Texture* sun_texture = nullptr;
 // region curves
 Hermite* hermite_curve = nullptr;
 // endregion
+
+
+bool island_moving = false;
+bool clouds_moving = false;
 
 
 Configuration::Configuration() {
@@ -91,6 +99,15 @@ Configuration::Configuration() {
     island_bridge = new Mesh("res/objects/island/island_bridge.obj", island_position,
                              glm::vec3(1.1f, 1.0f, 1.1f));
     island_small_floating_stone = new Mesh("res/objects/island/island_small_floating_stone.obj", island_position);
+
+    button_1 = new Mesh("res/objects/buttons/button_1.obj", island_position);
+    button_2 = new Mesh("res/objects/buttons/button_2.obj", island_position);
+    button_3 = new Mesh("res/objects/buttons/button_3.obj", island_position);
+
+    buttons = new std::vector<Mesh*>();
+    buttons->push_back(button_1);
+    buttons->push_back(button_2);
+    buttons->push_back(button_3);
     // endregion
 
 

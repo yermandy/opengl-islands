@@ -17,6 +17,10 @@ extern Mesh* island_water;
 extern Mesh* island_bridge;
 extern Mesh* island_small_floating_stone;
 extern std::vector<Mesh*>* island;
+extern Mesh* button_1;
+extern Mesh* button_2;
+extern Mesh* button_3;
+extern std::vector<Mesh*>* buttons;
 
 extern DirectionalLight* sun;
 extern PointLight* lamp;
@@ -30,6 +34,9 @@ extern Texture* texture;
 extern Texture* sun_texture;
 
 extern Hermite* hermite_curve;
+
+extern bool island_moving;
+extern bool clouds_moving;
 
 class Configuration {
 public:
