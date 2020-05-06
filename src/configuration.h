@@ -38,6 +38,7 @@ extern Hermite* hermite_curve;
 
 extern bool island_moving;
 extern bool clouds_moving;
+extern bool sun_shines;
 
 class Configuration {
 public:

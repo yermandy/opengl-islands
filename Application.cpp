@@ -296,7 +296,7 @@ int main() {
 
             ImGui::Begin("Debug");
 
-//            ImGui::SliderFloat3("light position", &lamp->m_position.x, -25.0f, 25.0f);
+            ImGui::SliderFloat3("light position", &lamp->m_position.x, -25.0f, 25.0f);
 
             ImGui::Separator();
 
@@ -307,7 +307,22 @@ int main() {
 
             glm::vec3 m_position = camera->m_position;
             ImGui::SliderFloat3("m_position", &m_position.x, -10.0f, 10.0f);
-            ImGui::SliderFloat3("stone pos", &island_small_floating_stone->m_position.x, -10.0f, 10.0f);
+            ImGui::SliderFloat("lamp->m_constant", &lamp->m_constant, 0.0f, 3.0f);
+            ImGui::SliderFloat("lamp->m_linear", &lamp->m_linear, 0.0f, 3.0f);
+            ImGui::SliderFloat("lamp->m_quadratic", &lamp->m_quadratic, 0.0f, 3.0f);
+
+            phong_shader->Bind();
+            phong_shader->SetVec3("point_lights[0].position", lamp->m_position);
+            phong_shader->SetVec3("point_lights[0].ambient", lamp->m_ambient);
+            phong_shader->SetVec3("point_lights[0].diffuse", lamp->m_diffuse);
+            phong_shader->SetVec3("point_lights[0].specular", lamp->m_specular);
+            phong_shader->SetFloat1("point_lights[0].constant", lamp->m_constant);
+            phong_shader->SetFloat1("point_lights[0].linear", lamp->m_linear);
+            phong_shader->SetFloat1("point_lights[0].quadratic", lamp->m_quadratic);
+
+            ImGui::Separator();
+
+//            ImGui::SliderFloat3("light", &island_small_floating_stone->m_position.x, -10.0f, 10.0f);
 
             ImGui::Separator();
 

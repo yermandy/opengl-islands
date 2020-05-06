@@ -40,6 +40,11 @@ void OnKeyEnter(GLFWwindow* window, int key, int scancode, int action, int mods)
     else if (action == GLFW_PRESS && key == GLFW_KEY_N) {
         skybox->ChangeSkybox();
     }
+    else if (action == GLFW_PRESS && key == GLFW_KEY_J) {
+        sun_shines = !sun_shines;
+        phong_shader->Bind();
+        phong_shader->SetInt1("sun_shines", sun_shines);
+    }
     else if (action == GLFW_PRESS && key == GLFW_KEY_F) {
         camera->fog = !camera->fog;
         phong_shader->Bind();
@@ -60,7 +65,7 @@ void OnMouseClick(GLFWwindow* window, int button, int action, int mods) {
                 island_moving = !island_moving;
         } else if (camera->looking_at_object == 2) {
             clouds_moving = !clouds_moving;
-            std::cout << "do 2" << std::endl;
+//            std::cout << "do 2" << std::endl;
         } else if (camera->looking_at_object == 3) {
             std::cout << "do 3" << std::endl;
         }

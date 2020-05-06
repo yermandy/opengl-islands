@@ -52,6 +52,7 @@ Hermite* hermite_curve = nullptr;
 
 bool island_moving = false;
 bool clouds_moving = false;
+bool sun_shines = true;
 
 
 Configuration::Configuration() {
@@ -155,7 +156,10 @@ Configuration::Configuration() {
     lamp = new PointLight(glm::vec3(0.1f),
                           glm::vec3(1.0f),
                           glm::vec3(1.0f),
-                          glm::vec3(2.4f, -3.7f, 0.3f));
+                          glm::vec3(2.432f, -3.7f, 0.295f),
+                          0.015f,
+                          0.26f,
+                          0.15f);
 
     flashlight = new SpotLight(glm::vec3(0.2f),
                                glm::vec3(1.0f),
