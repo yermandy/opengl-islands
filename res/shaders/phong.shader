@@ -107,7 +107,7 @@ uniform Material u_light;
 //uniform vec3 light_color = vec3(1);
 //uniform float light_power = 100;
 
-#define N_POINT_LIGHTS 1
+#define N_POINT_LIGHTS 2
 uniform PointLight point_lights[N_POINT_LIGHTS];
 uniform DirectionalLight sun;
 uniform SpotLight flashlight;

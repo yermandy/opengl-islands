@@ -22,17 +22,21 @@ extern Mesh* button_1;
 extern Mesh* button_2;
 extern Mesh* button_3;
 extern std::vector<Mesh*>* buttons;
+extern Mesh* fire;
 
 extern DirectionalLight* sun;
 extern PointLight* lamp;
+extern PointLight* campfire;
 extern SpotLight* flashlight;
 
 extern Shader* phong_shader;
 extern Shader* standard_shader;
 extern Shader* water_shader;
+extern Shader* animation_shader;
 
 extern Texture* texture;
 extern Texture* sun_texture;
+extern Texture* fire_texture;
 
 extern Hermite* hermite_curve;
 

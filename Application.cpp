@@ -33,7 +33,6 @@ int main() {
 
     Configuration configuration;
 
-
     do {
         renderer.Clear();
 
@@ -286,11 +285,37 @@ int main() {
         }
         // endregion
 
+        // region Fire
+        {
+            glEnable(GL_BLEND);
+            glBlendEquation(GL_FUNC_ADD);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            animation_shader->Bind();
+            int frame = glm::abs(glm::abs(int((-time + 50) * 30)) % 100 - 50);
+            animation_shader->SetFloat1("u_frame", frame);
+            fire_texture->Bind();
+            animation_shader->SetInt1("u_tex_sampler", 0);
+            M = glm::translate(glm::mat4(1.0f), fire->m_position);
+            animation_shader->SetMat4("u_MVP", P * V * M);
+            renderer.DrawTriangles(*fire->vao, *fire->ibo, *animation_shader);
+            glDisable(GL_BLEND);
+        }
+        // endregion
+
 
         // region ImGui window
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        // region campfire
+        {
+            phong_shader->Bind();
+            campfire->m_quadratic = glm::sin(time * 2) / 15 + 0.15;
+            phong_shader->SetFloat1("point_lights[1].quadratic", campfire->m_quadratic);
+        }
+        // endregion
+
 
         {
 
@@ -305,20 +330,23 @@ int main() {
 
 //            ImGui::SliderFloat("time", &t, 0.0f, 2.0f);
 
-            glm::vec3 m_position = camera->m_position;
-            ImGui::SliderFloat3("m_position", &m_position.x, -10.0f, 10.0f);
-            ImGui::SliderFloat("lamp->m_constant", &lamp->m_constant, 0.0f, 3.0f);
-            ImGui::SliderFloat("lamp->m_linear", &lamp->m_linear, 0.0f, 3.0f);
-            ImGui::SliderFloat("lamp->m_quadratic", &lamp->m_quadratic, 0.0f, 3.0f);
+//            glm::vec3 m_position = camera->m_position;
+//            ImGui::SliderFloat3("m_position", &m_position.x, -20.0f, 20.0f);
+//            ImGui::SliderFloat3("lamp->m_position", &campfire->m_position.x, -20.0f, 20.3f);
+//            ImGui::SliderFloat("lamp->m_constant", &campfire->m_constant, 0.0f, 3.0f);
+//            ImGui::SliderFloat("lamp->m_linear", &campfire->m_linear, 0.0f, 3.0f);
+//            ImGui::SliderFloat("lamp->m_quadratic", &campfire->m_quadratic, 0.0f, 3.0f);
 
-            phong_shader->Bind();
-            phong_shader->SetVec3("point_lights[0].position", lamp->m_position);
-            phong_shader->SetVec3("point_lights[0].ambient", lamp->m_ambient);
-            phong_shader->SetVec3("point_lights[0].diffuse", lamp->m_diffuse);
-            phong_shader->SetVec3("point_lights[0].specular", lamp->m_specular);
-            phong_shader->SetFloat1("point_lights[0].constant", lamp->m_constant);
-            phong_shader->SetFloat1("point_lights[0].linear", lamp->m_linear);
-            phong_shader->SetFloat1("point_lights[0].quadratic", lamp->m_quadratic);
+//            phong_shader->Bind();
+//            phong_shader->SetVec3("point_lights[1].position", campfire->m_position);
+//            phong_shader->SetVec3("point_lights[1].ambient", campfire->m_ambient);
+//            phong_shader->SetVec3("point_lights[1].diffuse", campfire->m_diffuse);
+//            phong_shader->SetVec3("point_lights[1].specular", campfire->m_specular);
+//            phong_shader->SetFloat1("point_lights[1].constant", campfire->m_constant);
+//            phong_shader->SetFloat1("point_lights[1].linear", campfire->m_linear);
+//            campfire->m_quadratic = glm::sin(time * 2) / 15 + 0.15;
+//            std::cout << campfire->m_quadratic << std::endl;
+//            phong_shader->SetFloat1("point_lights[1].quadratic", campfire->m_quadratic);
 
             ImGui::Separator();
 

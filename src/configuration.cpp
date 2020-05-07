@@ -22,12 +22,14 @@ Mesh* button_1 = nullptr;
 Mesh* button_2 = nullptr;
 Mesh* button_3 = nullptr;
 std::vector<Mesh*>* buttons = nullptr;
+Mesh* fire = nullptr;
 // endregion
 
 
 // region light sources
 DirectionalLight* sun = nullptr;
 PointLight* lamp = nullptr;
+PointLight* campfire = nullptr;
 SpotLight* flashlight = nullptr;
 // endregion
 
@@ -36,12 +38,14 @@ SpotLight* flashlight = nullptr;
 Shader* phong_shader = nullptr;
 Shader* standard_shader = nullptr;
 Shader* water_shader = nullptr;
+Shader* animation_shader = nullptr;
 // endregion
 
 
 // region textures
 Texture* texture = nullptr;
 Texture* sun_texture = nullptr;
+Texture* fire_texture = nullptr;
 // endregion
 
 
@@ -144,6 +148,8 @@ Configuration::Configuration() {
     buttons->push_back(button_1);
     buttons->push_back(button_2);
     buttons->push_back(button_3);
+
+    fire = new Mesh("res/objects/fire/fire.obj", island_position);
     // endregion
 
 
@@ -160,6 +166,14 @@ Configuration::Configuration() {
                           0.015f,
                           0.26f,
                           0.15f);
+
+    campfire = new PointLight(glm::vec3(0.1f),
+                              glm::vec3(1.0f),
+                              glm::vec3(1.0f),
+                              glm::vec3(-10.0f, -5.23f, 20.3f),
+                              0.015f,
+                              0.1f,
+                              0.15f);
 
     flashlight = new SpotLight(glm::vec3(0.2f),
                                glm::vec3(1.0f),
@@ -181,13 +195,20 @@ Configuration::Configuration() {
     phong_shader->SetVec3("u_light.ambient", glm::vec3(0.1f));
     phong_shader->SetVec3("u_light.diffuse", glm::vec3(0.7f));
     phong_shader->SetVec3("u_light.specular", glm::vec3(1.0f));
-    // setup point light
+    // setup point light (lamp)
     phong_shader->SetVec3("point_lights[0].position", lamp->m_position);
     phong_shader->SetVec3("point_lights[0].ambient", lamp->m_ambient);
     phong_shader->SetVec3("point_lights[0].diffuse", lamp->m_diffuse);
     phong_shader->SetVec3("point_lights[0].specular", lamp->m_specular);
     phong_shader->SetFloat1("point_lights[0].constant", lamp->m_constant);
-    phong_shader->SetFloat1("point_lights[0].linear", .2f);
+    phong_shader->SetFloat1("point_lights[0].linear", lamp->m_linear);
+    // setup point light (campfire)
+    phong_shader->SetVec3("point_lights[1].position", campfire->m_position);
+    phong_shader->SetVec3("point_lights[1].ambient", campfire->m_ambient);
+    phong_shader->SetVec3("point_lights[1].diffuse", campfire->m_diffuse);
+    phong_shader->SetVec3("point_lights[1].specular", campfire->m_specular);
+    phong_shader->SetFloat1("point_lights[1].constant", campfire->m_constant);
+    phong_shader->SetFloat1("point_lights[1].linear", campfire->m_linear);
     // setup spot light
     phong_shader->SetVec3("flashlight.position", flashlight->m_position);
     phong_shader->SetVec3("flashlight.direction", flashlight->m_direction);
@@ -204,12 +225,15 @@ Configuration::Configuration() {
     standard_shader = new Shader("res/shaders/standard.shader");
 
     water_shader = new Shader("res/shaders/water.shader");
+
+    animation_shader = new Shader("res/shaders/animation.shader");
     // endregion
 
 
     // region textures
     texture = new Texture("res/textures/cloud_texture.jpg");
     sun_texture = new Texture("res/textures/sun_texture.jpg");
+    fire_texture = new Texture("res/textures/insane_fire.jpg");
     // endregion
 
 
