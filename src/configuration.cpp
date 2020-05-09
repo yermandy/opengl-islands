@@ -57,6 +57,7 @@ Hermite* hermite_curve = nullptr;
 bool island_moving = false;
 bool clouds_moving = false;
 bool sun_shines = true;
+bool flame_burns = true;
 
 
 Configuration::Configuration() {

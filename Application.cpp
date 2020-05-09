@@ -285,8 +285,8 @@ int main() {
         }
         // endregion
 
-        // region Fire
-        {
+        // region Campfire
+        if (flame_burns) {
             glEnable(GL_BLEND);
             glBlendEquation(GL_FUNC_ADD);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -299,17 +299,7 @@ int main() {
             animation_shader->SetMat4("u_MVP", P * V * M);
             renderer.DrawTriangles(*fire->vao, *fire->ibo, *animation_shader);
             glDisable(GL_BLEND);
-        }
-        // endregion
-
-
-        // region ImGui window
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        // region campfire
-        {
+            // campfire light
             phong_shader->Bind();
             campfire->m_quadratic = glm::sin(time * 2) / 15 + 0.15;
             phong_shader->SetFloat1("point_lights[1].quadratic", campfire->m_quadratic);
@@ -317,7 +307,11 @@ int main() {
         // endregion
 
 
+        // region ImGui window
         {
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
             ImGui::Begin("Debug");
 
@@ -362,11 +356,10 @@ int main() {
                         1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
             ImGui::End();
+
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
-
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         // endregion
 
         // Swap buffers

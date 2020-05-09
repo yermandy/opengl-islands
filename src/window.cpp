@@ -13,67 +13,77 @@ void OnWindowResize(GLFWwindow* window, int width, int height) {
 
 void OnKeyEnter(GLFWwindow* window, int key, int scancode, int action, int mods) {
     Camera* camera = Camera::GetInstance();
-    if (action == GLFW_PRESS && key == GLFW_KEY_I) {
+    if (action == GLFW_PRESS) {
+        if (key == GLFW_KEY_I) {
 
-        if (camera->m_camera_view_type == CameraViewType::NONE) {
-            camera->m_camera_view_type = CameraViewType::FRONT;
-            camera->m_position = glm::vec3(-8.6f, 7.3f, 14.5f);
-            camera->m_vertical_angle = -0.5f;
-            camera->m_horizontal_angle = -3.7f;
-        } else if (camera->m_camera_view_type == CameraViewType::FRONT) {
-            camera->m_camera_view_type = CameraViewType::BACK;
-            camera->m_position = glm::vec3(4.8f, 1.85f, -8.75f);
-            camera->m_vertical_angle = -0.36f;
-            camera->m_horizontal_angle = 5.85f;
-        } else if (camera->m_camera_view_type == CameraViewType::BACK) {
-            camera->m_camera_view_type = CameraViewType::DYNAMIC;
-        } else {
-            camera->m_camera_view_type = CameraViewType::NONE;
+            if (camera->m_camera_view_type == CameraViewType::NONE) {
+                camera->m_camera_view_type = CameraViewType::FRONT;
+                camera->m_position = glm::vec3(-8.6f, 7.3f, 14.5f);
+                camera->m_vertical_angle = -0.5f;
+                camera->m_horizontal_angle = -3.7f;
+            } else if (camera->m_camera_view_type == CameraViewType::FRONT) {
+                camera->m_camera_view_type = CameraViewType::BACK;
+                camera->m_position = glm::vec3(4.8f, 1.85f, -8.75f);
+                camera->m_vertical_angle = -0.36f;
+                camera->m_horizontal_angle = 5.85f;
+            } else if (camera->m_camera_view_type == CameraViewType::BACK) {
+                camera->m_camera_view_type = CameraViewType::DYNAMIC;
+            } else {
+                camera->m_camera_view_type = CameraViewType::NONE;
+            }
         }
-    }
-    else if (action == GLFW_PRESS && key == GLFW_KEY_L) {
-        camera->flashlight->m_on = !camera->flashlight->m_on;
-    }
-    else if (action == GLFW_PRESS && key == GLFW_KEY_R) {
-        Configuration();
-    }
-    else if (action == GLFW_PRESS && key == GLFW_KEY_N) {
-        skybox->ChangeSkybox();
-    }
-    else if (action == GLFW_PRESS && key == GLFW_KEY_J) {
-        sun_shines = !sun_shines;
-        phong_shader->Bind();
-        phong_shader->SetInt1("sun_shines", sun_shines);
-    }
-    else if (action == GLFW_PRESS && key == GLFW_KEY_F) {
-        camera->fog = !camera->fog;
-        phong_shader->Bind();
-        phong_shader->SetInt1("fog", camera->fog);
-        water_shader->Bind();
-        water_shader->SetInt1("fog", camera->fog);
-        skybox->shader->Bind();
-        skybox->shader->SetInt1("fog", camera->fog);
+        else if (key == GLFW_KEY_L) {
+            camera->flashlight->m_on = !camera->flashlight->m_on;
+        }
+        else if (key == GLFW_KEY_R) {
+            Configuration();
+        }
+        else if (key == GLFW_KEY_N) {
+            skybox->ChangeSkybox();
+        }
+        else if (key == GLFW_KEY_J) {
+            sun_shines = !sun_shines;
+            phong_shader->Bind();
+            phong_shader->SetInt1("sun_shines", sun_shines);
+        }
+        else if (key == GLFW_KEY_F) {
+            camera->fog = !camera->fog;
+            phong_shader->Bind();
+            phong_shader->SetInt1("fog", camera->fog);
+            water_shader->Bind();
+            water_shader->SetInt1("fog", camera->fog);
+            skybox->shader->Bind();
+            skybox->shader->SetInt1("fog", camera->fog);
+        }
     }
 }
 
 void OnMouseClick(GLFWwindow* window, int button, int action, int mods) {
     Camera* camera = Camera::GetInstance();
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        if (camera->looking_at_object == 1) {
+        if (camera->distance_to_picking_object < 4.0f) {
+            if (camera->looking_at_object == 1) {
 //            std::cout << camera->distance_to_picking_object << std::endl;
-            if (camera->distance_to_picking_object < 4.0f)
                 island_moving = !island_moving;
-        } else if (camera->looking_at_object == 2) {
-            clouds_moving = !clouds_moving;
-//            std::cout << "do 2" << std::endl;
-        } else if (camera->looking_at_object == 3) {
-            std::cout << "do 3" << std::endl;
+            } else if (camera->looking_at_object == 2) {
+                clouds_moving = !clouds_moving;
+            } else if (camera->looking_at_object == 3) {
+                flame_burns = !flame_burns;
+                phong_shader->Bind();
+                if (!flame_burns) {
+                    phong_shader->SetVec3("point_lights[1].position", glm::vec3(0));
+                    phong_shader->SetVec3("point_lights[1].ambient", glm::vec3(0));
+                    phong_shader->SetVec3("point_lights[1].diffuse", glm::vec3(0));
+                } else {
+                    phong_shader->SetVec3("point_lights[1].position", campfire->m_position);
+                    phong_shader->SetVec3("point_lights[1].ambient", campfire->m_ambient);
+                    phong_shader->SetVec3("point_lights[1].diffuse", campfire->m_diffuse);
+                }
+            }
         }
     }
-
 //    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 //        std::cout << "right pressed" << std::endl;
-
 }
 
 // endregion
