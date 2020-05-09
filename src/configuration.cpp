@@ -46,6 +46,7 @@ Shader* animation_shader = nullptr;
 Texture* texture = nullptr;
 Texture* sun_texture = nullptr;
 Texture* fire_texture = nullptr;
+Texture* water_texture = nullptr;
 // endregion
 
 
@@ -135,7 +136,7 @@ Configuration::Configuration() {
     island_clouds->push_back(island_cloud_4);
 
     // initialize all other meshes
-    island_water = new Mesh("res/objects/island/island_water.obj", island_position);
+    island_water = new Mesh("res/objects/island/island_water_1.obj", island_position);
     island_bridge = new Mesh("res/objects/island/island_bridge.obj", island_position,
                              glm::vec3(1.1f, 1.0f, 1.1f));
     island_small_floating_stone = new Mesh("res/objects/island/island_small_floating_stone.obj", island_position);
@@ -227,6 +228,7 @@ Configuration::Configuration() {
 
     water_shader = new Shader("res/shaders/water.shader");
 
+
     animation_shader = new Shader("res/shaders/animation.shader");
     // endregion
 
@@ -235,6 +237,7 @@ Configuration::Configuration() {
     texture = new Texture("res/textures/cloud_texture.jpg");
     sun_texture = new Texture("res/textures/sun_texture.jpg");
     fire_texture = new Texture("res/textures/insane_fire.jpg");
+    water_texture = new Texture("res/textures/water.jpg");
     // endregion
 
 

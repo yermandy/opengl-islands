@@ -37,6 +37,7 @@ extern Shader* animation_shader;
 extern Texture* texture;
 extern Texture* sun_texture;
 extern Texture* fire_texture;
+extern Texture* water_texture;
 
 extern Hermite* hermite_curve;
 

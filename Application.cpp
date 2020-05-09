@@ -251,7 +251,6 @@ int main() {
             LOG(glEnable(GL_BLEND));
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             water_shader->Bind();
-            skybox->BindTexture();
             water_shader->SetVec3("u_camera_position", camera->GetPosition());
             M = glm::mat4(1.0f);
 //            M = glm::translate(M, glm::vec3(0.0f, 0.0f, 3.0f));
@@ -259,7 +258,13 @@ int main() {
 //            M = glm::translate(M, glm::vec3(0.0f, 0.0f, 0.0f));
             water_shader->SetMat4("u_M", M);
             water_shader->SetMat4("u_VP", VP);
+
+            skybox->BindTexture();
             water_shader->SetInt1("u_skybox", 0);
+
+            water_texture->Bind(1);
+            water_shader->SetInt1("u_water_tex", 1);
+
             renderer.DrawTriangles(*cube->vao, *cube->ibo, *water_shader);
             LOG(glDisable(GL_BLEND));
         }
@@ -271,14 +276,23 @@ int main() {
             LOG(glEnable(GL_BLEND));
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             water_shader->Bind();
-            skybox->BindTexture();
             M = glm::mat4(1.0f);
             M = glm::translate(M, island_water->m_position);
             M = glm::scale(M, island_water->m_scale);
             water_shader->SetVec3("u_camera_position", camera->GetPosition());
             water_shader->SetMat4("u_M", M);
             water_shader->SetMat4("u_VP", VP);
+
+            skybox->BindTexture();
             water_shader->SetInt1("u_skybox", 0);
+
+            water_texture->Bind(1);
+            water_shader->SetInt1("u_water_tex", 1);
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            water_shader->SetFloat1("u_bias", time / 10);
+
             water_shader->SetFloat1("u_time", std::cos(std::cos(float(time)) / 6));
             renderer.DrawTriangles(*island_water->vao, *island_water->ibo, *water_shader);
             LOG(glDisable(GL_BLEND));
@@ -344,7 +358,6 @@ int main() {
 
             ImGui::Separator();
 
-//            ImGui::SliderFloat3("light", &island_small_floating_stone->m_position.x, -10.0f, 10.0f);
 
             ImGui::Separator();
 
