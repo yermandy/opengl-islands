@@ -104,7 +104,7 @@ int main() {
                 renderer.DrawTriangles(*button->vao, *button->ibo, *phong_shader);
             }
 
-            glReadPixels(int(width / 2), int(height / 2), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE,
+            glReadPixels(int(camera->m_width), int(camera->m_height), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE,
                          &camera->looking_at_object);
 
             camera->distance_to_picking_object = 0;
@@ -374,6 +374,67 @@ int main() {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
         // endregion
+
+        // region Main menu
+        if (main_menu) {
+            glEnable(GL_STENCIL_TEST);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glDisable(GL_DEPTH_TEST);
+            standard_shader->Bind();
+            float ratio = camera->m_width / camera->m_height;
+            M = glm::mat4(1.0f);
+            M = glm::scale(M, glm::vec3(ratio / camera->m_width * 100, ratio / camera->m_height * 100, 1.0f));
+
+            standard_shader->SetInt1("u_use_texture", 1);
+            standard_shader->SetInt1("u_tex_sampler", 0);
+
+            // fog button
+            if (camera->fog)
+                menu_fog_on->Bind();
+            else
+                menu_fog_off->Bind();
+            standard_shader->SetMat4("u_MVP",  glm::translate(M, glm::vec3(2.0f, 1.0f, 0.0f)));
+            glStencilFunc(GL_ALWAYS, 4, -1);
+            renderer.DrawTriangles(*menu_bar->vao, *menu_bar->ibo, *standard_shader);
+
+            // fog flashlight
+            if (skybox->m_is_day)
+                menu_skybox_day->Bind();
+            else
+                menu_skybox_night->Bind();
+            standard_shader->SetMat4("u_MVP",  glm::translate(M, glm::vec3(-2.0f, 1.0f, 0.0f)));
+            glStencilFunc(GL_ALWAYS, 5, -1);
+            renderer.DrawTriangles(*menu_bar->vao, *menu_bar->ibo, *standard_shader);
+
+            // fog flashlight
+            if (camera->flashlight->m_on)
+                menu_flashlight_on->Bind();
+            else
+                menu_flashlight_off->Bind();
+            standard_shader->SetMat4("u_MVP",  glm::translate(M, glm::vec3(-2.0f, -1.0f, 0.0f)));
+            glStencilFunc(GL_ALWAYS, 6, -1);
+            renderer.DrawTriangles(*menu_bar->vao, *menu_bar->ibo, *standard_shader);
+
+            // fog sunlight
+            if (sun_shines)
+                menu_sunlight_on->Bind();
+            else
+                menu_sunlight_off->Bind();
+            standard_shader->SetMat4("u_MVP",  glm::translate(M, glm::vec3(2.0f, -1.0f, 0.0f)));
+            glStencilFunc(GL_ALWAYS, 7, -1);
+            renderer.DrawTriangles(*menu_bar->vao, *menu_bar->ibo, *standard_shader);
+
+            unsigned int menu_bar_id = 0;
+            glReadPixels(int(camera->m_mouse_xpos * 2), int((camera->m_height - camera->m_mouse_ypos) * 2) ,
+                    1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &menu_bar_id);
+            camera->looking_at_object = menu_bar_id;
+            glDisable(GL_STENCIL_TEST);
+            glDisable(GL_BLEND);
+            glEnable(GL_DEPTH_TEST);
+        }
+        // region menu
 
         // Swap buffers
         glfwSwapBuffers(window);

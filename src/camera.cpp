@@ -49,6 +49,9 @@ void Camera::UpdateViewProjection() {
     double current_time = glfwGetTime();
     auto delta_time = float(current_time - last_time);
 
+    // Get mouse position
+    glfwGetCursorPos(m_window, &m_mouse_xpos, &m_mouse_ypos);
+
     if (m_camera_view_type == CameraViewType::DYNAMIC) {
         auto t = float(current_time / 3.0f);
         int t_i = int(t) % 6;
@@ -64,9 +67,6 @@ void Camera::UpdateViewProjection() {
 
         m_horizontal_angle = -3.14f + glm::atan(m_position.x, m_position.z);
     } else if (!m_main_menu) {
-        // Get mouse position
-        glfwGetCursorPos(m_window, &m_mouse_xpos, &m_mouse_ypos);
-
         // Reset mouse position for next frame
         glfwSetCursorPos(m_window, m_width / 2, m_height / 2);
 

@@ -25,7 +25,7 @@ void main() {
 #shader fragment
 #version 330 core
 
-layout(location = 0) out vec3 color;
+layout(location = 0) out vec4 color;
 
 uniform sampler2D u_tex_sampler;
 uniform bool u_use_texture;
@@ -37,7 +37,7 @@ in vec2 v_uv;
 
 void main() {
     if (u_use_texture)
-        color = texture(u_tex_sampler, v_uv).rgb;
+        color = texture(u_tex_sampler, v_uv);
     else
-        color = fragment_color;
+        color = vec4(fragment_color, 1.0f);
 }

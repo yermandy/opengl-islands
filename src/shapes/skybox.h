@@ -14,9 +14,10 @@ public:
 
     std::shared_ptr<Shader> shader;
 
+    bool m_is_day = true;
+
 private:
     unsigned int m_cube_map_texture_day_id{};
     unsigned int m_cube_map_texture_night_id{};
     unsigned int m_vao{}, m_ibo{};
-    bool m_is_day = true;
 };

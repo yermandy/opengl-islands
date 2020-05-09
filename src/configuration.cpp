@@ -23,6 +23,7 @@ Mesh* button_2 = nullptr;
 Mesh* button_3 = nullptr;
 std::vector<Mesh*>* buttons = nullptr;
 Mesh* fire = nullptr;
+Mesh* menu_bar = nullptr;
 // endregion
 
 
@@ -47,6 +48,14 @@ Texture* texture = nullptr;
 Texture* sun_texture = nullptr;
 Texture* fire_texture = nullptr;
 Texture* water_texture = nullptr;
+Texture* menu_fog_on = nullptr;
+Texture* menu_fog_off = nullptr;
+Texture* menu_sunlight_on = nullptr;
+Texture* menu_sunlight_off = nullptr;
+Texture* menu_flashlight_on = nullptr;
+Texture* menu_flashlight_off = nullptr;
+Texture* menu_skybox_day = nullptr;
+Texture* menu_skybox_night = nullptr;
 // endregion
 
 
@@ -59,6 +68,7 @@ bool island_moving = false;
 bool clouds_moving = false;
 bool sun_shines = true;
 bool flame_burns = true;
+bool main_menu = false;
 
 
 Configuration::Configuration() {
@@ -152,6 +162,7 @@ Configuration::Configuration() {
     buttons->push_back(button_3);
 
     fire = new Mesh("res/objects/fire/fire.obj", island_position);
+    menu_bar = new Mesh("res/objects/menu_bar.obj");
     // endregion
 
 
@@ -238,6 +249,15 @@ Configuration::Configuration() {
     sun_texture = new Texture("res/textures/sun_texture.jpg");
     fire_texture = new Texture("res/textures/fire.jpg");
     water_texture = new Texture("res/textures/water.jpg");
+
+    menu_fog_on = new Texture("res/textures/menu/fog_on.png");
+    menu_fog_off = new Texture("res/textures/menu/fog_off.png");
+    menu_sunlight_on = new Texture("res/textures/menu/sunlight_on.png");
+    menu_sunlight_off = new Texture("res/textures/menu/sunlight_off.png");
+    menu_flashlight_on = new Texture("res/textures/menu/flashlight_on.png");
+    menu_flashlight_off = new Texture("res/textures/menu/flashlight_off.png");
+    menu_skybox_day = new Texture("res/textures/menu/skybox_day.png");
+    menu_skybox_night = new Texture("res/textures/menu/skybox_night.png");
     // endregion
 
 

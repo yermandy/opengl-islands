@@ -5,6 +5,9 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+void SimulateFog();
+void SimulateSun();
+
 // region Callbacks
 
 void OnWindowResize(GLFWwindow* window, int width, int height) {
@@ -15,7 +18,6 @@ void OnKeyEnter(GLFWwindow* window, int key, int scancode, int action, int mods)
     Camera* camera = Camera::GetInstance();
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_I) {
-
             if (camera->m_camera_view_type == CameraViewType::NONE) {
                 camera->m_camera_view_type = CameraViewType::FRONT;
                 camera->m_position = glm::vec3(-8.6f, 7.3f, 14.5f);
@@ -42,18 +44,20 @@ void OnKeyEnter(GLFWwindow* window, int key, int scancode, int action, int mods)
             skybox->ChangeSkybox();
         }
         else if (key == GLFW_KEY_J) {
-            sun_shines = !sun_shines;
-            phong_shader->Bind();
-            phong_shader->SetInt1("sun_shines", sun_shines);
+            SimulateSun();
         }
         else if (key == GLFW_KEY_F) {
-            camera->fog = !camera->fog;
-            phong_shader->Bind();
-            phong_shader->SetInt1("fog", camera->fog);
-            water_shader->Bind();
-            water_shader->SetInt1("fog", camera->fog);
-            skybox->shader->Bind();
-            skybox->shader->SetInt1("fog", camera->fog);
+            SimulateFog();
+        }
+        else if (key == GLFW_KEY_SLASH) {
+            main_menu = !main_menu;
+            camera->m_main_menu = main_menu;
+            if (main_menu)
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            else {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                glfwSetCursorPos(window, camera->m_width / 2, camera->m_height / 2);
+            }
         }
     }
 }
@@ -79,6 +83,14 @@ void OnMouseClick(GLFWwindow* window, int button, int action, int mods) {
                     phong_shader->SetVec3("point_lights[1].ambient", campfire->m_ambient);
                     phong_shader->SetVec3("point_lights[1].diffuse", campfire->m_diffuse);
                 }
+            } else if (camera->looking_at_object == 4) {
+                SimulateFog();
+            } else if (camera->looking_at_object == 5) {
+                skybox->ChangeSkybox();
+            } else if (camera->looking_at_object == 6) {
+                camera->flashlight->m_on = !camera->flashlight->m_on;
+            } else if (camera->looking_at_object == 7) {
+                SimulateSun();
             }
         }
     }
@@ -87,6 +99,23 @@ void OnMouseClick(GLFWwindow* window, int button, int action, int mods) {
 }
 
 // endregion
+
+void SimulateFog() {
+    Camera* camera = Camera::GetInstance();
+    camera->fog = !camera->fog;
+    phong_shader->Bind();
+    phong_shader->SetInt1("fog", camera->fog);
+    water_shader->Bind();
+    water_shader->SetInt1("fog", camera->fog);
+    skybox->shader->Bind();
+    skybox->shader->SetInt1("fog", camera->fog);
+}
+
+void SimulateSun() {
+    sun_shines = !sun_shines;
+    phong_shader->Bind();
+    phong_shader->SetInt1("sun_shines", sun_shines);
+}
 
 GLFWwindow* InitWindow(int width, int height) {
     GLFWwindow* window;

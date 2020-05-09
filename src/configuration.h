@@ -23,6 +23,7 @@ extern Mesh* button_2;
 extern Mesh* button_3;
 extern std::vector<Mesh*>* buttons;
 extern Mesh* fire;
+extern Mesh* menu_bar;
 
 extern DirectionalLight* sun;
 extern PointLight* lamp;
@@ -38,6 +39,14 @@ extern Texture* texture;
 extern Texture* sun_texture;
 extern Texture* fire_texture;
 extern Texture* water_texture;
+extern Texture* menu_fog_on;
+extern Texture* menu_fog_off;
+extern Texture* menu_sunlight_on;
+extern Texture* menu_sunlight_off;
+extern Texture* menu_flashlight_on;
+extern Texture* menu_flashlight_off;
+extern Texture* menu_skybox_day;
+extern Texture* menu_skybox_night;
 
 extern Hermite* hermite_curve;
 
@@ -45,6 +54,7 @@ extern bool island_moving;
 extern bool clouds_moving;
 extern bool sun_shines;
 extern bool flame_burns;
+extern bool main_menu;
 
 class Configuration {
 public:
