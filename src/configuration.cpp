@@ -236,7 +236,7 @@ Configuration::Configuration() {
     // region textures
     texture = new Texture("res/textures/cloud_texture.jpg");
     sun_texture = new Texture("res/textures/sun_texture.jpg");
-    fire_texture = new Texture("res/textures/insane_fire.jpg");
+    fire_texture = new Texture("res/textures/fire.jpg");
     water_texture = new Texture("res/textures/water.jpg");
     // endregion
 
