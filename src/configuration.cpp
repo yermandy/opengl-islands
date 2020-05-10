@@ -106,6 +106,8 @@ Configuration::Configuration() {
     Mesh* island_2_tree_leaves = new Mesh("res/objects/island_2/island_2_tree_leaves.obj", island_position);
     Mesh* island_2_tree_wood = new Mesh("res/objects/island_2/island_2_tree_wood.obj", island_position);
     Mesh* island_2_clouds = new Mesh("res/objects/island_2/island_2_clouds.obj", island_position);
+    Mesh* island_2_pine_spikes = new Mesh("res/objects/pine_trees/pine_spikes.obj", island_position);
+    Mesh* island_2_pine_wood = new Mesh("res/objects/pine_trees/pine_wood.obj", island_position);
 
     island = new std::vector<Mesh*>();
     island->push_back(island_ground_1);
@@ -132,6 +134,8 @@ Configuration::Configuration() {
     island->push_back(island_2_tree_leaves);
     island->push_back(island_2_tree_wood);
     island->push_back(island_2_clouds);
+    island->push_back(island_2_pine_spikes);
+    island->push_back(island_2_pine_wood);
 
     // initialize clouds
     Mesh* island_cloud_1 = new Mesh("res/objects/island/island_cloud_1.obj", island_position);

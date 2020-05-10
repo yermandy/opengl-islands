@@ -58,9 +58,9 @@ void main()
     vec4 water_tex_color = texture(u_water_tex, vec2(f_tex_coord.x - u_bias / 2, f_tex_coord.y + u_bias));
     vec4 mix_colors = mix(reflected_color, refracted_color, 0.5);
     f_color = mix(vec4(0, 0.1, 0.3, 0.3), mix_colors, 0.5);
+    f_color = mix(f_color, water_tex_color, 0.2);
     if (fog) {
         float d = distance(eye_direction_cameraspace, f_position);
         f_color = mix(f_color, vec4(0.5, 0.5, 0.5, 1), 1 - exp(- (d * fog_density)));
     }
-    f_color = mix(f_color, water_tex_color, 0.2);
 }
